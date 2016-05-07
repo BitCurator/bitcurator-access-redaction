@@ -19,17 +19,17 @@ with open(os.path.join('bctools', '__init__.py')) as init_:
 setup(name='libredact',
       version=version,
       description='BitCurator Access Redaction Tools',
-      author='Kam Woods',
-      author_email='kamwoods@gmail.com',
-      maintainer = "Kam Woods",
-      maintainer_email = "kamwoods@gmail.com",
+      author='BitCurator',
+      author_email='bitcurator@gmail.com',
+      maintainer = "BitCurator",
+      maintainer_email = "bitcurator@gmail.com",
       url="https://github.com/bitcurator/bca-redtools",
       #packages=['bctools', ],
       #package_data={'bctools': ['font/*.ttf', 'font/*.txt']},
 
       py_modules = ['dfxml', 'fiwalk'],
 
-      scripts = ['redact_image.py'],
+      scripts = ['iredact.py'],
 
       classifiers = ['Development Status :: 2 - Pre-Alpha'
                      "Intended Audience :: Developers",
