@@ -1,0 +1,1 @@
+Original version of iredact.py. Non-2to3 converted. Do not use. Reference only.
