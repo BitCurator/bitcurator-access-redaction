@@ -33,3 +33,13 @@ The redaction tool can be run from the command line as follows:
 A sample iredact-config.txt file is included. You should modify it as needed.
 
 (Future: improve config procedure)
+
+# Dependencies
+
+The redaction tool requires fiwalk, which is distributed with The Sleuth Kit (https://github.com/sleuthkit/sleuthkit).
+
+# Licenses
+
+Project documentation and other non-software products of the BitCurator Access team and contracted partners are subject to the the Creative Commons Attribution 4.0 Unported license (CC BY 4.0).
+
+Unless otherwise indicated, software objects in this repository are distributed under the terms of the GNU General Public License, Version 3. See the text file "LICENSE" for further details about the terms of this license.
