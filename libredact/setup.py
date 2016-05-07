@@ -5,7 +5,7 @@ import warnings
 from setuptools import setup
 
 
-with open(os.path.join('bctools', '__init__.py')) as init_:
+with open(os.path.join('libredact', '__init__.py')) as init_:
     for line in init_:
         if '__version__' in line:
             version = line.split('=')[-1].strip().replace('"','')
