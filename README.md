@@ -22,11 +22,14 @@ Build and install with Python 3 setuptools:
  * python3 setup.py build
  * sudo python3 setup.py install
 
+(Future: Should be updated for virtualenv)
+
 # Running
 
 The redaction tool can be run from the command line as follows:
 
- * python3 iredact.py /path/to/iredact-config.txt
+ * iredact.py /path/to/iredact-config.txt
 
 A sample iredact-config.txt file is included. You should modify it as needed.
 
+(Future: improve config procedure)
