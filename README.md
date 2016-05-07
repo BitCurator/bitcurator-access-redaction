@@ -28,5 +28,5 @@ The redaction tool can be run from the command line as follows:
 
  * python3 iredact.py /path/to/iredact-config.txt
 
- A sample iredact-config.txt file is included. You should modify it as needed.
+A sample iredact-config.txt file is included. You should modify it as needed.
 
