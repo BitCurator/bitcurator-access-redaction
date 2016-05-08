@@ -29,7 +29,7 @@ setup(name='libredact',
 
       py_modules = ['dfxml', 'fiwalk'],
 
-      scripts = ['iredact.py'],
+      scripts = ['sredact.py'],
 
       classifiers = ['Development Status :: 2 - Pre-Alpha'
                      "Intended Audience :: Developers",

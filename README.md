@@ -5,7 +5,7 @@ Disk image and bitstream redaction tools for the BitCurator Access project.
 
 This repository currently includes the following libraries:
 
- * libredact: A standalone rewrite of the iredact.py tool
+ * libredact: A Python redaction library and standalone raw disk image redaction tool. Loosely based on the iredact.py tool.
 
 # Building and installing libredact
 
@@ -22,15 +22,17 @@ Build and install with Python 3 setuptools:
  * python3 setup.py build
  * sudo python3 setup.py install
 
-(Future: Should be updated for virtualenv)
+Note: Python 3 is required. Do not attempt to build or install with Python 2.x.
+
+(Future: Should be updated for virtualenv and pip package creation)
 
 # Running
 
 The redaction tool can be run from the command line as follows:
 
- * iredact.py /path/to/iredact-config.txt
+ * sredact.py /path/to/iredact-config.txt
 
-A sample iredact-config.txt file is included. You should modify it as needed.
+A sample sredact-config.txt file is included. You should modify it as needed.
 
 (Future: improve config procedure)
 
