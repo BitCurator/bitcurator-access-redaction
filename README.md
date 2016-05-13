@@ -11,7 +11,7 @@ This repository currently includes the following libraries:
 
 Clone out this repository:
 
- * git clone https://github.com/bitcurator/bca-webtools
+ * git clone https://github.com/bitcurator/bca-redtools
 
 Navigate to the libredact directory:
 
