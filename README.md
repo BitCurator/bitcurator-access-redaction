@@ -15,7 +15,7 @@ Clone out this repository:
 
 Navigate to the libredact directory:
 
- * cd bca-webtools/libredact
+ * cd bca-redtools/libredact
 
 Build and install with Python 3 setuptools:
 
@@ -30,7 +30,7 @@ Note: Python 3 is required. Do not attempt to build or install with Python 2.x.
 
 The redaction tool can be run from the command line as follows:
 
- * sredact.py /path/to/iredact-config.txt
+ * sredact.py /path/to/sredact-config.txt
 
 A sample sredact-config.txt file is included. You should modify it as needed.
 
