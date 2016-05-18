@@ -1,8 +1,8 @@
 #
 # Paths to the disk image and fiwalk XML output
 #
-IMAGEFILE /home/bcadmin/Desktop/jowork.raw.raw 
-XMLFILE /home/bcadmin/Desktop/jofiwalk.xml
+IMAGE_FILE /home/bcadmin/Desktop/jowork.raw.raw
+DFXML_FILE /home/bcadmin/Desktop/jofiwalk.xml
 
 #
 # Redaction patterns
@@ -21,8 +21,7 @@ FILEPAT *.exe FUZZ
 #CONTAINS This FILL 0x44
 #FILEPAT *Spotlight* FILL 0x44
 
-# 
+#
 # Uncomment this line to actually commit the redaction:
 #
 COMMIT
-
