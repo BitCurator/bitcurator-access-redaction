@@ -23,8 +23,8 @@ Options:
   -v, --version    print sredact version and exit
 """
 
-import os.path
-import fiwalk
+from redact import Redactor
+import logging
 
 
 config_help = """
@@ -76,57 +76,7 @@ KEY 12342343
 """
 
 
-def need_md5(self):
-    for (rule, action) in self.cmds:
-        if rule.__class__ == redact_rule_md5:
-            return True
-    return False
-
-
-def need_sha1(self):
-    for (rule, action) in self.cmds:
-        if rule.__class__ == redact_rule_sha1:
-            return True
-    return False
-
-
-def fiwalk_opts(self):
-    "Returns the options that fiwalk needs given the redaction requested."
-    opts = "-x"
-    if self.need_sha1():
-        opts = opts + "1"
-    if self.need_md5():
-        opts = opts + "m"
-    return opts
-
-
-def process_file(self, fileinfo):
-    for (rule, action) in self.cmds:
-        if rule.should_redact(fileinfo):
-            print("Processing file: %s" % fileinfo.filename())
-
-            if self.ignore_rule.should_ignore(fileinfo):
-                print("(Ignoring %s)" % fileinfo.filename())
-                return
-
-            print("")
-            print("Redacting ", fileinfo.filename())
-            print("Reason:", str(rule))
-            print("Action:", action)
-            action.redact(rule, fileinfo, self)
-            if rule.complete:
-                return  # only need to redact once!
-
-    def close_files(self):
-        if self.imagefile and self.imagefile.closed is False:
-            print("Closing file: %s" % self.imagefile.name)
-            self.imagefile.close()
-        if self.xmlfile and self.xmlfile.closed is False:
-            print("Closing file: %s" % self.xmlfile.name)
-            self.xmlfile.close()
-
-
-if __name__ == "__main__":
+def main():
     from docopt import docopt
     from libredact import __version__
     args = docopt(__doc__, version=__version__)
@@ -138,52 +88,33 @@ if __name__ == "__main__":
         exit()
 
     # Set up console log levels (default=warn, quiet=error, debug=debug)
-    log_level = 'warn'
+    log_level = logging.WARN
     if args.get('--quiet'):
-        log_level = 'error'
+        log_level = logging.ERROR
     if args.get('--debug'):  # debug overrides quiet
-        log_level = 'debug'
+        log_level = logging.DEBUG
+    logging.basicConfig(level=log_level)
 
     # Read the redaction configuration file
-    from libredact.config import RedactConfigParser
-    cfg = RedactConfigParser.parse(args.get('CONFIG_FILE'))
+    from libredact.config import parse
+    cfg = parse(args.get('CONFIG_FILE'))
 
     # Override any CLI arguments
     if args.get('--image'):
-        cfg.set('IMAGE_FILE', args.get('--image'))
+        cfg['IMAGE_FILE'] = args.get('--image')
     if args.get('--dfxml'):
-        cfg.set('DFXML_FILE', args.get('--dfxml'))
+        cfg['DFXML_FILE'] = args.get('--dfxml')
     if args.get('--report'):
-        cfg.set('REPORT_FILE', args.get('--report'))
+        cfg['REPORT_FILE'] = args.get('--report')
     if args.get('--dry-run'):  # if True then override COMMIT
-        cfg.set('COMMIT', False)
-    # print(cfg)
+        cfg['COMMIT'] = False
 
-    # Validate configuration
-    from schema import Schema, Optional, Or, Use, SchemaError
-    schema = Schema({
-        'IMAGE_FILE': Use(lambda f: open(f, 'r+b'), error='IMAGE_FILE is not writable'),
-        Optional('DFXML_FILE'): Or(None,
-                                   Use(lambda f: open(f, 'r'), error='Cannot read DFXML_FILE')),
-        Optional('REPORT_FILE'): Or(None,
-                                    Use(lambda f: open(f, 'w'), error='Cannot write REPORT_FILE')),
-        'COMMIT': Or(True, False)})
-    try:
-        args = schema.validate(cfg)
-    except SchemaError as e:
-        exit(e)
+    logging.debug('Combined config & arguments:\n%s' % cfg)
 
-    if cfg.get('COMMIT'):
-        logger.warn("COMMIT is True, performing redaction")
-    else:
-        logger.warn("COMMIT is False, dry-run only")
+    redactor = Redactor(cfg)
 
     import time
     t0 = time.time()
-    # fiwalk.fiwalk_using_sax(
-    #    imagefile=rc.imagefile, xmlfile=rc.xmlfile, callback=rc.process_file)
+    redactor.execute()
     t1 = time.time()
-
-    close_files()
-
     print("Time to run: %d seconds" % (t1 - t0))

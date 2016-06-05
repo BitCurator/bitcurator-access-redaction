@@ -10,6 +10,10 @@ DFXML_FILE /home/bcadmin/Desktop/jofiwalk.xml
 #FILEPAT *.dll FUZZ
 #FILEPAT *.com FUZZ
 FILEPAT *.exe FUZZ
+FILEPAT *.trashinfo FUZZ
+
+IGNORE *.htm|*.HTM
+IGNORE *.html|*.HTML
 
 #
 # Other examples

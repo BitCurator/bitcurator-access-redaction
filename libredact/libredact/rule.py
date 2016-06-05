@@ -1,6 +1,11 @@
 import re
 
 
+def convert_fileglob_to_re(fileglob):
+    regex = fileglob.replace(".", "[.]").replace("*", ".*").replace("?", ".?")
+    return re.compile(regex)
+
+
 class redact_rule:
 
     """ Instances of this class are objects that can decide whether or not to redact."""
@@ -128,26 +133,3 @@ class rule_string(redact_rule):
                         (file_offset + offset, tlen, img_offset + offset))
                     offset += 1         #
         return ret
-
-
-class ignore_rule():
-    """Not actually a redact rule, but rather a rule for global ignores"""
-
-    def __init__(self):
-        self.ignore_patterns = []
-
-    def ignore(self, ignore):
-        """Ignores specified files based on a regex"""
-        self.ignore_patterns.append(re.compile(convert_fileglob_to_re(ignore)))
-        return self
-
-    def should_ignore(self, fi):
-        for ig in self.ignore_patterns:
-            if ig.search(fi.filename()):
-                return True
-        return False
-
-
-def convert_fileglob_to_re(fileglob):
-    regex = fileglob.replace(".", "[.]").replace("*", ".*").replace("?", ".?")
-    return re.compile(regex)
