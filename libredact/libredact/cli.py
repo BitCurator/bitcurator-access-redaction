@@ -17,7 +17,7 @@ Options:
   --report=FILE    create an audit report of redactions performed
   -n, --dry-run    runs analysis and creates the report without redact actions, overrides COMMIT
   -q, --quiet      quiet mode (no console output unless errors occur)
-  -d, --debug      debug mode, prints individual actions taken (or planned in dry runs)
+  -d, --detail     detail mode, prints individual actions taken (or planned in dry runs)
   -h, --help       show this usage information
   -H, --chelp      show configuration help
   -v, --version    print sredact version and exit
@@ -91,7 +91,7 @@ def main():
     log_level = logging.WARN
     if args.get('--quiet'):
         log_level = logging.ERROR
-    if args.get('--debug'):  # debug overrides quiet
+    if args.get('--detail'):  # debug overrides quiet
         log_level = logging.DEBUG
     logging.basicConfig(level=log_level)
 
@@ -101,17 +101,18 @@ def main():
 
     # Override any CLI arguments
     if args.get('--image'):
-        cfg['IMAGE_FILE'] = args.get('--image')
+        cfg['image_file'] = args.get('--image')
     if args.get('--dfxml'):
-        cfg['DFXML_FILE'] = args.get('--dfxml')
+        cfg['dfxml_file'] = args.get('--dfxml')
     if args.get('--report'):
-        cfg['REPORT_FILE'] = args.get('--report')
+        cfg['report_file'] = args.get('--report')
     if args.get('--dry-run'):  # if True then override COMMIT
-        cfg['COMMIT'] = False
+        cfg['commit'] = False
+    cfg['detail'] = args.get('--detail')
 
     logging.debug('Combined config & arguments:\n%s' % cfg)
 
-    redactor = Redactor(cfg)
+    redactor = Redactor(**cfg)
 
     import time
     t0 = time.time()

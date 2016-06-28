@@ -9,12 +9,12 @@ from libredact.action import action_fill, action_fuzz, action_encrypt
 def parse(filepath):
     result = {
       'rules': [],
-      'COMMIT': False,
-      'IMAGE_FILE': None,
-      'DFXML_FILE': None,
-      'REPORT_FILE': None,
-      'KEY': None,
-      'IGNORE_PATTERNS': []
+      'commit': False,
+      'image_file': None,
+      'dfxml_file': None,
+      'report_file': None,
+      'key': None,
+      'ignore_patterns': []
     }
 
     for line in open(filepath, "r"):
@@ -32,23 +32,27 @@ def parse(filepath):
 
         # First look for simple commands
         if cmd == 'KEY':
-            result['KEY'] = atoms[1]
+            result['key'] = atoms[1]
             continue
 
         if cmd == "COMMIT":
-            result['COMMIT'] = True
+            result['commit'] = True
             continue
 
         if cmd == "IMAGE_FILE":
-            result['IMAGE_FILE'] = atoms[1]
+            result['image_file'] = atoms[1]
+            continue
+
+        if cmd == "REPORT_FILE":
+            result['report_file'] = atoms[1]
             continue
 
         if cmd == "DFXML_FILE":
-            result['DFXML_FILE'] = atoms[1]
+            result['dfxml_file'] = atoms[1]
             continue
 
         if cmd == 'IGNORE':
-            result['IGNORE_PATTERNS'].append(atoms[1])
+            result['ignore_patterns'].append(atoms[1])
             continue
 
         # Now look for commands that are rules

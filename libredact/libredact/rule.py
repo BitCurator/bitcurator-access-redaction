@@ -1,4 +1,5 @@
 import re
+import os
 
 
 def convert_fileglob_to_re(fileglob):
@@ -20,7 +21,7 @@ class redact_rule:
             "redact method of redact_rule super class should not be called")
 
     def __str__(self):
-        return "action<" + self.line + ">"
+        return self.line
 
     def runs_to_redact(self, fi):
         """Returns the byte_runs of the source which match the rule.
@@ -55,7 +56,6 @@ class rule_sha1(redact_rule):
 class rule_filepat(redact_rule):
 
     def __init__(self, line, filepat):
-        import re
         redact_rule.__init__(self, line)
         # convert fileglobbing to regular expression
         self.filepat_re = convert_fileglob_to_re(filepat)
@@ -120,7 +120,6 @@ class rule_string(redact_rule):
         tlen = len(self.text)
         for run in fi.byte_runs():
             (file_offset, run_len, img_offset) = run
-
             run_content = fi.content_for_run(run)
             offset = 0
             # Now find all the places inside "run"
