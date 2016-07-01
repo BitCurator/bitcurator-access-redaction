@@ -11,43 +11,42 @@ This repository currently includes the following libraries:
 
 * Install PIP:
 
-    $ sudo apt-get install python-pip
+    `$ sudo apt-get install python-pip`
 
 # Building and installing libredact
 
 * Clone this repository:
 
-    $ git clone https://github.com/bitcurator/bca-redtools
+    `$ git clone https://github.com/bitcurator/bca-redtools`
 
 * Switch to the 'develop' branch:
 
-    $ cd bca-redtools
-    $ git checkout develop
+    `$ cd bca-redtools`
+    `$ git checkout develop`
 
 * Navigate to the libredact directory:
 
-    $ cd libredact
+    `$ cd libredact`
 
 * Build and install with PIP:
 
-    $ pip install -e .
+    `$ pip install -e .`
 
-* PIP will create a executable script here: /home/<user>/.local/bin/sredact
+* PIP will create a executable script here: /home/youruser/.local/bin/sredact
 
 * If sredact is not on your PATH, you can add it temporarily:
 
-    $ PATH=$PATH:/home/`whoami`/.local/bin
+    ``$ PATH=$PATH:/home/`whoami`/.local/bin``
 
 # Running
 
 The redaction tool can be run from the command line as follows:
 
-    $ sredact -h
+    `$ sredact -h`
 
-Instructions for creating a configuration file are also available on the
-command line:
+Instructions for creating a configuration file are also available on the command line:
 
-    $ sredact -H
+    `$ sredact -H`
 
 (Future: improve config instructions)
 
