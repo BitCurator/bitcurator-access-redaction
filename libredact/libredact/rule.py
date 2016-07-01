@@ -1,5 +1,6 @@
 import re
 import os
+from dfxml import byte_run
 
 
 def convert_fileglob_to_re(fileglob):
@@ -13,7 +14,7 @@ class redact_rule:
 
     def __init__(self, line):
         self.line = line
-        self.complete = True               # by default, redacts everything
+        self.complete = True  # by default, redacts everything
 
     def should_redact(self, fileobject):
         """Returns True if this fileobject should be redacted"""
@@ -29,7 +30,7 @@ class redact_rule:
         return fi.byte_runs()
 
 
-class rule_md5(redact_rule):
+class rule_file_md5(redact_rule):
 
     """ redact if the MD5 matches"""
 
@@ -41,7 +42,7 @@ class rule_md5(redact_rule):
         return self.md5val == fi.tag('md5')
 
 
-class rule_sha1(redact_rule):
+class rule_file_sha1(redact_rule):
 
     """ redact if the SHA1 matches"""
 
@@ -53,24 +54,22 @@ class rule_sha1(redact_rule):
         return self.sha1val == fi.tag('sha1')
 
 
-class rule_filepat(redact_rule):
+class rule_file_name_match(redact_rule):
 
     def __init__(self, line, filepat):
         redact_rule.__init__(self, line)
         # convert fileglobbing to regular expression
         self.filepat_re = convert_fileglob_to_re(filepat)
-        print(("adding rule to redact path " + self.filepat_re.pattern))
 
     def should_redact(self, fileobject):
         return self.filepat_re.search(fileobject.filename())
 
 
-class rule_filename(redact_rule):
+class rule_file_name_equal(redact_rule):
 
     def __init__(self, line, filename):
         redact_rule.__init__(self, line)
         self.filename = filename
-        print(("adding rule to redact filename " + self.filename))
 
     def should_redact(self, fileobject):
         was = os.path.sep
@@ -80,7 +79,7 @@ class rule_filename(redact_rule):
         return ret
 
 
-class rule_dirname(redact_rule):
+class rule_file_dirname_equal(redact_rule):
 
     def __init__(self, line, dirname):
         redact_rule.__init__(self, line)
@@ -94,7 +93,33 @@ class rule_dirname(redact_rule):
         return ret
 
 
-class rule_contains(redact_rule):
+class rule_file_seq_match(redact_rule):
+
+    def __init__(self, line, text):
+        redact_rule.__init__(self, line)
+        self.text = text
+
+    def should_redact(self, fileobject):
+        raise ValueError(
+            "redaction rule not implemented")
+
+
+class rule_seq_match(redact_rule):
+
+    def __init__(self, line, text):
+        redact_rule.__init__(self, line)
+        self.text = text
+        self.complete = False
+
+    def should_redact(self, fileobject):
+        raise ValueError(
+            "redaction rule not implemented")
+
+    def runs_to_redact(self, fi):
+        """Overridden to return the byte runs of just the given text"""
+
+
+class rule_file_seq_equal(redact_rule):
 
     def __init__(self, line, text):
         redact_rule.__init__(self, line)
@@ -104,7 +129,7 @@ class rule_contains(redact_rule):
         return self.text in fileobject.contents()
 
 
-class rule_string(redact_rule):
+class rule_seq_equal(redact_rule):
 
     def __init__(self, line, text):
         redact_rule.__init__(self, line)
@@ -119,16 +144,22 @@ class rule_string(redact_rule):
         ret = []
         tlen = len(self.text)
         for run in fi.byte_runs():
-            (file_offset, run_len, img_offset) = run
+            print(run)
+            file_offset = run.file_offset
+            run_len = run.len
+            img_offset = run.img_offset
+            # (file_offset, run_len, img_offset) = run
             run_content = fi.content_for_run(run)
             offset = 0
             # Now find all the places inside "run"
             # where the text "self.text" appears
-            print(("looking for '{}' in '{}'".format(self.text, run)))
+            # print(("looking for '{}' in '{}'".format(self.text, run)))
             while offset >= 0:
-                offset = run.find(self.text, offset)
+                offset = run_content.find(self.text, offset)
                 if offset >= 0:
                     ret.append(
-                        (file_offset + offset, tlen, img_offset + offset))
-                    offset += 1         #
+                        byte_run(img_offset=img_offset + offset,
+                                 len=tlen,
+                                 file_offset=file_offset + offset))
+                    offset += 1
         return ret

@@ -6,7 +6,8 @@ Redacts disk images according to the given configuration.
 import logging
 import fiwalk
 import re
-from rule import redact_rule, rule_md5, rule_sha1, convert_fileglob_to_re
+import shutil
+from rule import redact_rule, rule_file_md5, rule_file_sha1, convert_fileglob_to_re
 from action import redact_action, _
 
 
@@ -16,11 +17,15 @@ class Redactor:
     report = None
     commit = False
 
-    def __init__(self, **kwargs):
+    def __init__(self, input_file=None, output_file=None, dfxml_file=None, report_file=None,
+                 commit=False, ignore_patterns=[], key=None, rules=[]):
         #  Validate configuration
-        from schema import Schema, Optional, Or, Use, SchemaError
+        from schema import Schema, Optional, Or, Use, And, SchemaError
         schema = Schema({
-            'image_file': Use(lambda f: open(f, 'r+b'), error='Image file is not writable'),
+            'input_file': Use(lambda f: open(f, 'r'), error='Cannot read the input file'),
+            Optional('output_file'):
+            Or(None,
+               Use(lambda f: open(f, 'w'), error='Cannot write to the output file')),
             Optional('dfxml_file'):
             Or(None,
                Use(lambda f: open(f, 'r'), error='Cannot read DFXML file')),
@@ -28,40 +33,49 @@ class Redactor:
             Or(None,
                lambda f: open(f, 'w'), error='Cannot write to the report file'),
             'commit': Or(True, False),
-            Optional('detail'): Or(True, False),
             'ignore_patterns':
                 Use(lambda f: re.compile(convert_fileglob_to_re('|'.join(f))),
                     error='Cannot compile unified ignore regex'),
             'key': Or(None, str),
-            'rules': [(redact_rule, redact_action)]})
+            'rules': And([(redact_rule, redact_action)], lambda f: len(f) > 0)})
         try:
+            kwargs = {
+                'input_file': input_file,
+                'output_file': output_file,
+                'dfxml_file': dfxml_file,
+                'report_file': report_file,
+                'commit': commit,
+                'ignore_patterns': ignore_patterns,
+                'key': key,
+                'rules': rules
+            }
             self.conf = schema.validate(kwargs)
         except SchemaError as e:
             logging.warning('The sredact configuration did not validate:')
             exit(e)
+        if self.conf['commit'] and 'output_file' not in self.conf.keys():
+            logging.error('An output file is required when COMMIT is on.')
+            exit(1)
+        # TODO Check input and output are not same file
 
         logging.debug('Configuration:\n%s' % self.conf)
 
-        self.image_file = self.conf['image_file']
+        self.input_file = self.conf['input_file']
+        self.output_file = self.conf['output_file']
         self.report_file = self.conf['report_file']
         self.dfxml_file = self.conf['dfxml_file']
-        self.detail = self.conf['detail']
         self.commit = self.conf['commit']
         self.configure_report_logger()
-        if self.commit:
-            logging.warning("COMMIT is True, performing redaction")
-        else:
-            logging.warning("COMMIT is False, dry-run only")
 
     def need_md5(self):
         for (rule, action) in self.conf['rules']:
-            if rule.__class__ == rule_md5:
+            if rule.__class__ == rule_file_md5:
                 return True
         return False
 
     def need_sha1(self):
         for (rule, action) in self.conf['rules']:
-            if rule.__class__ == rule_sha1:
+            if rule.__class__ == rule_file_sha1:
                 return True
         return False
 
@@ -84,37 +98,45 @@ class Redactor:
             return
         for (rule, action) in self.conf['rules']:
             if rule.should_redact(fileinfo):
-                action.redact(rule, fileinfo, self.image_file, self.commit)
+                action.redact(rule, fileinfo, self.output_file, self.commit)
                 if rule.complete:
                     return  # only need to redact once!
 
     def close_files(self):
-        for f in [self.image_file, self.dfxml_file]:
+        for f in [self.input_file, self.output_file, self.dfxml_file]:
             if f and f.closed is False:
                 logging.debug("Closing file: %s" % f.name)
                 f.close()
 
     def execute(self):
-        if self.conf.get('COMMIT'):
-            logging.warning("Performing redactions..")
+        if self.conf.get('commit'):
+            logging.warning("Commit is ON. Will perform redactions..")
         else:
-            logging.warning("Performing dry-run only..")
+            logging.warning("Commit is OFF. Performing dry-run only..")
         if self.report_logger is not None:
-            self.report_logger.info(_(self.conf))
+            logtext = ''
+            for key, value in self.conf.iteritems():
+                logtext += key + ': ' + str(value) + '  '
+            self.report_logger.info(_({'config': logtext}))
+        # Copy input_file to output_file
+        if not self.output_file.closed:
+            self.output_file.close()
+        if not self.input_file.closed:
+            self.input_file.close()
+        shutil.copy(self.input_file.name, self.output_file.name)
+        self.output_file = open(self.output_file.name, 'r+')
+        self.input_file = open(self.input_file.name, 'r')
+
         fiwalk.fiwalk_using_sax(
-            imagefile=self.image_file,
+            imagefile=self.output_file,
             xmlfile=self.dfxml_file,
             callback=self.process_file)
         self.close_files()
+        logging.warn("files closed")
 
     def configure_report_logger(self):
         logger = logging.getLogger('audit_report')
-
-        # Using DEBUG as 'detailed' logging level
-        if self.detail:
-            logger.setLevel(logging.DEBUG)
-        else:
-            logger.setLevel(logging.INFO)
+        logger.setLevel(logging.INFO)
 
         # create file handler which logs even debug messages
         if self.report_file is None:
@@ -127,5 +149,7 @@ class Redactor:
         formatter = logging.Formatter('%(message)s')
         fh.setFormatter(formatter)
         # add the handlers to the logger
+        for h in list(logger.handlers):
+            logger.removeHandler(h)
         logger.addHandler(fh)
         self.report_logger = logger
