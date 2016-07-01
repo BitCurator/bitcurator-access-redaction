@@ -5,36 +5,59 @@ Disk image and bitstream redaction tools for the BitCurator Access project.
 
 This repository currently includes the following libraries:
 
- * libredact: A Python redaction library and standalone raw disk image redaction tool. Loosely based on the iredact.py tool.
+* libredact: A Python redaction library and standalone raw disk image redaction tool. Loosely based on the iredact.py tool.
+
+# Prerequisites
+
+* Install PIP:
+
+    $ sudo apt-get install python-pip
 
 # Building and installing libredact
 
-Clone out this repository:
+* Clone this repository:
 
- * git clone https://github.com/bitcurator/bca-redtools
+    $ git clone https://github.com/bitcurator/bca-redtools
 
-Navigate to the libredact directory:
+* Switch to the 'develop' branch:
 
- * cd bca-redtools/libredact
+    $ cd bca-redtools
+    $ git checkout develop
 
-Build and install with Python 3 setuptools:
+* Navigate to the libredact directory:
 
- * python3 setup.py build
- * sudo python3 setup.py install
+    $ cd libredact
 
-Note: Python 3 is required. Do not attempt to build or install with Python 2.x.
+* Build and install with PIP:
 
-(Future: Should be updated for virtualenv and pip package creation)
+    $ pip install -e .
+
+* PIP will create a executable script here: /home/<user>/.local/bin/sredact
+
+* If sredact is not on your PATH, you can add it temporarily:
+
+    $ PATH=$PATH:/home/`whoami`/.local/bin
 
 # Running
 
 The redaction tool can be run from the command line as follows:
 
- * sredact.py /path/to/sredact-config.txt
+    $ sredact -h
 
-A sample sredact-config.txt file is included. You should modify it as needed.
+Instructions for creating a configuration file are also available on the
+command line:
 
-(Future: improve config procedure)
+    $ sredact -H
+
+(Future: improve config instructions)
+
+# Using the Python module
+
+All of the same functions as the command line are also available in the
+libredact module. Below is a short example Python script that uses the
+Redactor API to process a disk image.
+
+
 
 # Dependencies
 
