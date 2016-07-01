@@ -42,11 +42,11 @@ This repository currently includes the following libraries:
 
 The redaction tool can be run from the command line as follows:
 
-    `$ sredact -h`
+    $ sredact -h
 
 Instructions for creating a configuration file are also available on the command line:
 
-    `$ sredact -H`
+    $ sredact -H
 
 (Future: improve config instructions)
 
