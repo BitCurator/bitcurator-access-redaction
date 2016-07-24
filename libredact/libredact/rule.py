@@ -1,6 +1,8 @@
 import re
+import mmap
 import os
 from dfxml import byte_run
+from contextlib import closing
 
 
 def convert_fileglob_to_re(fileglob):
@@ -95,13 +97,27 @@ class rule_file_dirname_equal(redact_rule):
 
 class rule_file_seq_match(redact_rule):
 
-    def __init__(self, line, text):
+    def __init__(self, line, seq_pattern):
         redact_rule.__init__(self, line)
-        self.text = text
+        self.seq_pattern = seq_pattern
+        self.seq_pattern_re = re.compile(seq_pattern)
 
     def should_redact(self, fileobject):
-        raise ValueError(
-            "redaction rule not implemented")
+        # Use memory-mapped tempfile for more than 128MB
+        if fileobject.has_contents() is False:
+            return False
+        if 0 < fileobject.filesize > 1024 * 1024 * 128:
+            import tempfile
+            tf = tempfile.NamedTemporaryFile(delete=False)
+            tf.close()
+            fileobject.savefile(tf.name)
+            tf.close()
+            with closing(open(tf.name, 'r+')) as tempfile:
+                mf = mmap.mmap(tempfile.fileno(), 0, access=mmap.ACCESS_READ)
+                return self.seq_pattern_re.search(mf)
+        else:
+            byte_array = fileobject.contents()
+            return self.seq_pattern_re.search(byte_array)
 
 
 class rule_seq_match(redact_rule):
@@ -117,6 +133,7 @@ class rule_seq_match(redact_rule):
 
     def runs_to_redact(self, fi):
         """Overridden to return the byte runs of just the given text"""
+        # TODO sequences need to account for utf-8 double characters
 
 
 class rule_file_seq_equal(redact_rule):
@@ -163,3 +180,28 @@ class rule_seq_equal(redact_rule):
                                  file_offset=file_offset + offset))
                     offset += 1
         return ret
+
+
+def get_runs_for_file_sequences(fi, file_sequences):
+    ret = []
+    tlen = len(self.text)
+    for run in fi.byte_runs():
+        print(run)
+        file_offset = run.file_offset
+        run_len = run.len
+        img_offset = run.img_offset
+        # (file_offset, run_len, img_offset) = run
+        run_content = fi.content_for_run(run)
+        offset = 0
+        # Now find all the places inside "run"
+        # where the text "self.text" appears
+        # print(("looking for '{}' in '{}'".format(self.text, run)))
+        while offset >= 0:
+            offset = run_content.find(self.text, offset)
+            if offset >= 0:
+                ret.append(
+                    byte_run(img_offset=img_offset + offset,
+                             len=tlen,
+                             file_offset=file_offset + offset))
+                offset += 1
+    return ret

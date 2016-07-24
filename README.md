@@ -8,46 +8,46 @@ This repository currently includes the following libraries:
 * libredact: A Python redaction library and standalone raw disk image redaction tool. Loosely based on the iredact.py tool.
 
 # Prerequisites
-
 * Install PIP:
-
-    `$ sudo apt-get install python-pip`
+```shell
+$ sudo apt-get install python-pip
+```
 
 # Building and installing libredact
-
 * Clone this repository:
-
-    `$ git clone https://github.com/bitcurator/bca-redtools`
-
+```shell
+$ git clone https://github.com/bitcurator/bca-redtools
+```
 * Switch to the 'develop' branch:
-
-    `$ cd bca-redtools`
-    `$ git checkout develop`
-
+```shell
+$ cd bca-redtools
+$ git checkout develop
+```
 * Navigate to the libredact directory:
-
-    `$ cd libredact`
-
+```shell
+$ cd libredact
+```
 * Build and install with PIP:
-
-    `$ pip install -e .`
-
+```shell
+$ pip install -e .
+```
 * PIP will create a executable script here: /home/youruser/.local/bin/sredact
 
 * If sredact is not on your PATH, you can add it temporarily:
-
-    ``$ PATH=$PATH:/home/`whoami`/.local/bin``
+```shell
+$ PATH=$PATH:/home/`whoami`/.local/bin
+```
 
 # Running
 
 The redaction tool can be run from the command line as follows:
-
+```shell
     $ sredact -h
-
+```
 Instructions for creating a configuration file are also available on the command line:
-
+```shell
     $ sredact -H
-
+```
 (Future: improve config instructions)
 
 # Using the Python module

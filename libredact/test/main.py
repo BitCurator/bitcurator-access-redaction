@@ -23,7 +23,7 @@ FILE_SHA1 7f9f0286e16e9c74c992e682e27487a9eb691e86 FILL 0x44
 # Fill Kafka sequences in Metamorphsis.txt with K
 SEQ_EQUAL Kafka FILL 0x4B
 
-# FILE_SEQ_MATCH \d{3}-?\d{2}-?\d{4} FILL 0x44
+FILE_SEQ_MATCH \d{3}-?\d{2}-?\d{4} FILL 0x44
 # SEQ_MATCH \d{3}-?\d{2}-?\d{4} FILL 0x44
 
 # Scrub EATME.TXT
@@ -42,7 +42,7 @@ class RedactTest(unittest.TestCase):
     def test_config_parse(self):
         config_in = StringIO.StringIO(config_string)
         result = config.parsehandle(config_in)
-        self.assertEqual(len(result['rules']), 6)
+        self.assertEqual(len(result['rules']), 7)
         self.assertEqual(len(result['ignore_patterns']), 2)
         self.assertEqual(result['input_file'], "/home/bcadmin/Desktop/jowork.raw")
         self.assertEqual(result['dfxml_file'], "/home/bcadmin/Desktop/jofiwalk.xml")
@@ -61,6 +61,8 @@ FILE_SHA1 7f9f0286e16e9c74c992e682e27487a9eb691e86 FILL 0x44
 
 # Fill Kafka sequences in Metamorphsis.txt with K
 SEQ_EQUAL Kafka FILL 0x4B
+
+FILE_SEQ_MATCH \d{3}-?\d{2}-?\d{4} FILL 0x44
 
 # Scrub EATME.TXT
 FILE_SEQ_EQUAL pineapple-upside-down-cake SCRUB
