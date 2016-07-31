@@ -18,10 +18,9 @@ $ sudo apt-get install python-pip
 ```shell
 $ git clone https://github.com/bitcurator/bca-redtools
 ```
-* Switch to the 'develop' branch:
+* Enter the repository directory:
 ```shell
 $ cd bca-redtools
-$ git checkout develop
 ```
 * Navigate to the libredact directory:
 ```shell
