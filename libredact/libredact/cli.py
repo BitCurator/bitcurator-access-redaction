@@ -1,6 +1,6 @@
 """Usage:
-  sredact [-nqd] CONFIG_FILE
-  sredact [-nqd] [--image=FILE] [--dfxml=FILE] [--report=FILE] CONFIG_FILE
+  sredact [-nqd] -c FILE
+  sredact [-nqd] [--input=FILE] [--output=FILE] [--dfxml=FILE] [--report=FILE] --config=FILE
   sredact -h | --help
   sredact -H
   sredact -v | --version
@@ -8,19 +8,19 @@
 This program redacts a disk image file using a set of rules that describe what to redact and
 how to redact it. Prints a summary of actions taken to standard output.
 
-Arguments:
-  CONFIG_FILE     configuration file that specifies rules and other items (for details, see -H)
-
 Options:
-  --image=FILE     disk image file to redact (or use file specified in CONFIG_FILE)
-  --dfxml=FILE     previously generated dfxml file (or use file specified in CONFIG_FILE)
-  --report=FILE    create an audit report of redactions performed
-  -n, --dry-run    runs analysis and creates the report without redact actions, overrides COMMIT
-  -q, --quiet      quiet mode (no console output unless errors occur)
-  -d, --detail     detail mode, prints individual actions taken (or planned in dry runs)
-  -h, --help       show this usage information
-  -H, --chelp      show configuration help
-  -v, --version    print sredact version and exit
+  -c, --config=FILE      configuration file specifies redaction settings (see -H for details)
+  -i, --input=FILE       disk image file to redact (or use file specified by --config)
+  -o, --output=FILE      file location for output redacted image file (required for COMMIT)
+  --dfxml=FILE           previously generated dfxml file (or use file specified by --config)
+  --report=FILE          create an audit report of redactions performed
+  -n, --dry-run          creates report without taking action ( overrides COMMIT in --config)
+  -q, --quiet            quiet mode (no console output unless errors occur)
+  -d, --detail           detail mode, prints individual actions taken (or planned in dry runs)
+  -p, --progress=FILE    writes progress to the stdout or a file, if specified
+  -h, --help             show this usage information
+  -H, --chelp            show configuration help
+  -v, --version          print version and exit
 """
 
 from redact import Redactor
@@ -37,41 +37,46 @@ file. The readaction configuration file consists of commands, one per line. Orde
 does not matter.
 
 Simple Commands:
-  IMAGE_FILE        path to disk image file to redact
-  DFXML_FILE        optional path to previously generated DFXML
-  REPORT_FILE       optional path to write audit report file
-  IGNORE <regex>    ignore files whose names match regex (repeatable)
-  KEY <key>         encrytion key used by ENCRYPT action, see below
+  INPUT_FILE <file path>     path to disk image file to redact
+  OUTPUT_FILE <file path>    path to write the redacted disk image
+  DFXML_FILE <file path>     optional path to previously generated DFXML
+  REPORT_FILE <file path>    optional path to write audit report file
+  IGNORE <pattern>           ignore files whose names match regex (repeatable)
   COMMIT            perform rule actions
                     (w/o COMMIT we have a dry run and report will indicate planned actions)
 
 Rule Command Format:
-  [condition] [action]
+  [target condition] [action]
 
 Each rule consists of an "condition" and an "action".
 
-Conditions:
-  FILENAME <afilename> - a file with the given name
-  FILEPAT  <a file pattern> - any file with a given pattern
-  DIRNAME  <a directory> - any file in the directory
-  MD5 <a md5> - any file with the given md5
-  SHA1 <a sha1> - any file with the given sha1
-  CONTAINS <a string> - any file that contains <a string>
+Target Conditions:
+  FILE_NAME_EQUAL <filename> - target a file with the given filename
+  FILE_NAME_MATCH <pattern> - target any file with a given filename pattern
+  FILE_DIRNAME_EQUAL <directory> - target all files in the directory
+  FILE_MD5 <md5> - target any file with the given md5
+  FILE_SHA1 <sha1> - target any file with the given sha1
+  FILE_SEQ_EQUAL <string> - target any file that contains <a string>
+  (not implemented) FILE_SEQ_MATCH <pattern> - target any file that contains a sequence matching <a pattern>
+  SEQ_EQUAL <string> - target any sequences equal to <a string>
+  (not implemented) SEQ_MATCH <pattern> - target any sequences matching <a pattern>
 
 Actions:
-  SCRUB MATCH     Scrubs the pattern where it occurs
-  SCRUB SECTOR    Scrubs the block where the patern occurs
-  SCRUB FILE      Scrubs the file in which the pattern occurs
-  FILL 0x44       overwrite by filling with character 0x44 ('D')
-  ENCRYPT         encrypts the data, using KEY
-  FUZZ            fuzz the binary, but not the strings
+  SCRUB        overwrite the bytes in the target with zeroes
+  FILL 0x44    overwrite by filling with character 0x44 ('D')
+  FUZZ         fuzz the binary, but not the strings
+
+Patterns:
+  Patterns can be a wildcard expression of the form '*.txt', for example. They can also be a regular
+  expression. For example, this regular expression will target social security numbers
+  '\d{3}-?\d{2}-?\d{4}'. Be cautious with patterns and the SEQ_MATCH condition. It is easy to write
+  a pattern that will match the whole file.
 
 Example file:
 ===============
-MD5 3482347345345 SCRUB FILE
-MATCH simsong@acm.org SCRUB FILE
-MATCH foobar SCRUB BLOCK
-KEY 12342343
+FILE_MD5 3482347345345 SCRUB
+FILE_SEQ_EQUAL greg@example.com FILL 0x47
+FILE_DIRNAME_EQUAL C:/Windows FUZZ
 ================================================================
 """
 
@@ -80,9 +85,7 @@ def main():
     from docopt import docopt
     from libredact import __version__
     args = docopt(__doc__, version=__version__)
-    # print(args)
 
-    # Command-line interface
     if args.get('--chelp'):
         print(config_help)
         exit()
@@ -97,11 +100,13 @@ def main():
 
     # Read the redaction configuration file
     from libredact.config import parse
-    cfg = parse(args.get('CONFIG_FILE'))
+    cfg = parse(args.get('--config'))
 
     # Override any CLI arguments
-    if args.get('--image'):
-        cfg['image_file'] = args.get('--image')
+    if args.get('--input'):
+        cfg['image_file'] = args.get('--input')
+    if args.get('--output'):
+        cfg['output_file'] = args.get('--output')
     if args.get('--dfxml'):
         cfg['dfxml_file'] = args.get('--dfxml')
     if args.get('--report'):

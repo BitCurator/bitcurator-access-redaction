@@ -1,23 +1,29 @@
 '''Parser(s) for sredact configuration files
 '''
 
-from libredact.rule import rule_md5, rule_sha1, rule_string, rule_filepat, rule_filename, \
-    rule_contains
-from libredact.action import action_fill, action_fuzz, action_encrypt
+from libredact.rule import rule_file_md5, rule_file_sha1, rule_file_name_match, \
+    rule_file_name_equal, rule_file_dirname_equal, rule_file_seq_match, rule_file_seq_equal, \
+    rule_seq_equal, rule_seq_match
+from libredact.action import action_fill, action_fuzz, action_scrub
 
 
 def parse(filepath):
+    handle = open(filepath, "r")
+    return parsehandle(handle)
+
+
+def parsehandle(handle):
     result = {
       'rules': [],
       'commit': False,
-      'image_file': None,
+      'input_file': None,
       'dfxml_file': None,
       'report_file': None,
       'key': None,
       'ignore_patterns': []
     }
 
-    for line in open(filepath, "r"):
+    for line in handle:
         if line[0] in '#;':
             continue       # comment line
         line = line.strip()
@@ -39,8 +45,12 @@ def parse(filepath):
             result['commit'] = True
             continue
 
-        if cmd == "IMAGE_FILE":
-            result['image_file'] = atoms[1]
+        if cmd == "INPUT_FILE":
+            result['input_file'] = atoms[1]
+            continue
+
+        if cmd == "OUTPUT_FILE":
+            result['output_file'] = atoms[1]
             continue
 
         if cmd == "REPORT_FILE":
@@ -57,26 +67,34 @@ def parse(filepath):
 
         # Now look for commands that are rules
 
-        if cmd == 'MD5':
-            rule = rule_md5(line, atoms[1])
-        if cmd == 'SHA1':
-            rule = rule_sha1(line, atoms[1])
-        if cmd == 'FILENAME':
-            rule = rule_filename(line, atoms[1])
-        if cmd == 'FILEPAT':
-            rule = rule_filepat(line, atoms[1])
-        if cmd == 'CONTAINS':
-            rule = rule_contains(line, atoms[1])
-        if cmd == 'STRING':
-            rule = rule_string(line, atoms[1])
+        if cmd in ['FILE_MD5', 'MD5']:
+            rule = rule_file_md5(line, atoms[1])
+        if cmd in ['FILE_SHA1', 'SHA1']:
+            rule = rule_file_sha1(line, atoms[1])
+        if cmd in ['FILE_NAME_EQUAL', 'FILENAME']:
+            rule = rule_file_name_equal(line, atoms[1])
+        if cmd in ['FILE_NAME_MATCH', 'FILEPAT']:
+            rule = rule_file_name_match(line, atoms[1])
+        if cmd in ['FILE_DIRNAME_EQUAL', 'DIRNAME']:
+            rule = rule_file_dirname_equal(line, atoms[1])
+        if cmd in ['FILE_SEQ_EQUAL', 'CONTAINS']:
+            rule = rule_file_seq_equal(line, atoms[1])
+        if cmd in ['FILE_SEQ_MATCH', 'MATCH']:
+            rule = rule_file_seq_match(line, atoms[1])
+        if cmd == 'SEQ_MATCH':
+            rule = rule_seq_match(line, atoms[1])
+        if cmd in ['SEQ_EQUAL', 'STRING']:
+            rule = rule_seq_equal(line, atoms[1])
 
         if rule:
             if atoms[2].upper() == 'FILL':
                 action = action_fill(eval(atoms[3]))
-            if atoms[2].upper() == 'ENCRYPT':
-                action = action_encrypt()
+            # if atoms[2].upper() == 'ENCRYPT':
+            #    action = action_encrypt()
             if atoms[2].upper() == 'FUZZ':
                 action = action_fuzz()
+            if atoms[2].upper() == 'SCRUB':
+                action = action_scrub()
 
         if not rule or not action:
             print("atoms:", atoms)

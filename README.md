@@ -5,36 +5,58 @@ Disk image and bitstream redaction tools for the BitCurator Access project.
 
 This repository currently includes the following libraries:
 
- * libredact: A Python redaction library and standalone raw disk image redaction tool. Loosely based on the iredact.py tool.
+* libredact: A Python redaction library and standalone raw disk image redaction tool. Loosely based on the iredact.py tool.
+
+# Prerequisites
+* Install PIP:
+```shell
+$ sudo apt-get install python-pip
+```
 
 # Building and installing libredact
+* Clone this repository:
+```shell
+$ git clone https://github.com/bitcurator/bca-redtools
+```
+* Switch to the 'develop' branch:
+```shell
+$ cd bca-redtools
+$ git checkout develop
+```
+* Navigate to the libredact directory:
+```shell
+$ cd libredact
+```
+* Build and install with PIP:
+```shell
+$ pip install -e .
+```
+* PIP will create a executable script here: /home/youruser/.local/bin/sredact
 
-Clone out this repository:
-
- * git clone https://github.com/bitcurator/bca-redtools
-
-Navigate to the libredact directory:
-
- * cd bca-redtools/libredact
-
-Build and install with Python 3 setuptools:
-
- * python3 setup.py build
- * sudo python3 setup.py install
-
-Note: Python 3 is required. Do not attempt to build or install with Python 2.x.
-
-(Future: Should be updated for virtualenv and pip package creation)
+* If sredact is not on your PATH, you can add it temporarily:
+```shell
+$ PATH=$PATH:/home/`whoami`/.local/bin
+```
 
 # Running
 
 The redaction tool can be run from the command line as follows:
+```shell
+    $ sredact -h
+```
+Instructions for creating a configuration file are also available on the command line:
+```shell
+    $ sredact -H
+```
+(Future: improve config instructions)
 
- * sredact.py /path/to/sredact-config.txt
+# Using the Python module
 
-A sample sredact-config.txt file is included. You should modify it as needed.
+All of the same functions as the command line are also available in the
+libredact module. Below is a short example Python script that uses the
+Redactor API to process a disk image.
 
-(Future: improve config procedure)
+
 
 # Dependencies
 
