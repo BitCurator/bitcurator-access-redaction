@@ -1,4 +1,9 @@
-* These UI files are for reference only
+bca-redtools: Reference files for GUI development
+-------------------------------------------------
+
+# These UI files are for reference only
+
+- GUI development files and runtime are located in the "GUI" directory
 
 - attic contains a more complex UI from a previous tool for reference
 - bca-redtools-gui is a complete QtCreator project using QT5. This is where the redactwindow.ui comes from.
