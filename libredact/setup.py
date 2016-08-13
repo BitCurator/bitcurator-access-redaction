@@ -25,12 +25,12 @@ setup(name='libredact',
       maintainer_email="bitcurator@gmail.com",
       url="https://github.com/bitcurator/bca-redtools",
       install_requires=[
-        "schema",
+        "schema"
       ],
       # packages=['bctools', ],
       # package_data={'bctools': ['font/*.ttf', 'font/*.txt']},
 
-      py_modules=['dfxml', 'fiwalk'],
+      py_modules=['dfxml', 'fiwalk', 'lightgrep'],
 
       entry_points={
         'console_scripts': [

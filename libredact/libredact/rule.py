@@ -1,8 +1,10 @@
 import re
 import mmap
 import os
+from ctypes import *
 from dfxml import byte_run
 from contextlib import closing
+from lightgrep import Lightgrep, HitAccumulator, KeyOpts
 
 
 def convert_fileglob_to_re(fileglob):
@@ -121,19 +123,41 @@ class rule_file_seq_match(redact_rule):
 
 
 class rule_seq_match(redact_rule):
+    lg = Lightgrep()
+    accum = HitAccumulator()
 
-    def __init__(self, line, text):
+    def __init__(self, line, lgpattern):
         redact_rule.__init__(self, line)
-        self.text = text
+        self.lgpattern = lgpattern
         self.complete = False
+        pats = [(lgpattern, ['US-ASCII', 'UTF-8', 'UTF-16LE', 'ISO-8859-1'], KeyOpts(fixedString=False, caseInsensitive=True))]
+        prog, pmap = Lightgrep.createProgram(pats)
+        self.lg.createContext(prog, pmap, self.accum.lgCallback)
 
     def should_redact(self, fileobject):
-        raise ValueError(
-            "redaction rule not implemented")
+        hitcount = self.lg.searchBuffer(fileobject.contents(), self.accum)
+        return hitcount > 0
 
     def runs_to_redact(self, fi):
         """Overridden to return the byte runs of just the given text"""
-        # TODO sequences need to account for utf-8 double characters
+        red_seqs = []
+        for h in self.accum.Hits:
+            print("hit at (%s, %s) on keyindex %s, pattern is '%s' with encoding chain '%s'" %
+                  (str(h.get("start")),
+                   str(h.get("end")),
+                   str(h.get("keywordIndex")),
+                   h.get("pattern"),
+                   h.get("encChain")))
+            new = True
+            for seq in red_seqs:
+                if seq[0] == h['start'] and seq[1] == h['end']:
+                    new = False
+                    break
+            if new:
+                red_seqs.append((h['start'], h['end']))
+        self.lg.reset()
+        self.accum.reset()
+        return get_runs_for_file_sequences(fi, red_seqs)
 
 
 class rule_file_seq_equal(redact_rule):
@@ -183,25 +207,31 @@ class rule_seq_equal(redact_rule):
 
 
 def get_runs_for_file_sequences(fi, file_sequences):
+    '''Takes a list of tuples containing start, end file offsets'''
     ret = []
-    tlen = len(self.text)
-    for run in fi.byte_runs():
-        print(run)
-        file_offset = run.file_offset
-        run_len = run.len
-        img_offset = run.img_offset
-        # (file_offset, run_len, img_offset) = run
-        run_content = fi.content_for_run(run)
-        offset = 0
-        # Now find all the places inside "run"
-        # where the text "self.text" appears
-        # print(("looking for '{}' in '{}'".format(self.text, run)))
-        while offset >= 0:
-            offset = run_content.find(self.text, offset)
-            if offset >= 0:
+    for start, end in file_sequences:
+        for run in fi.byte_runs():
+            # handle starting point of a sequence
+            if start > (run.file_offset + run.len):
+                continue  # not starting yet, go to next run
+            elif start < run.file_offset:  # started in prior run and not finished
+                file_offset = run.file_offset
+                img_offset = run.img_offset
+            else:  # starting within this run
+                file_offset = start
+                img_offset = run.img_offset + (start - run.file_offset)
+
+            # handle end of sequence
+            if end <= (run.file_offset + run.len):  # sequence ends within run
+                len = end - file_offset
                 ret.append(
-                    byte_run(img_offset=img_offset + offset,
-                             len=tlen,
-                             file_offset=file_offset + offset))
-                offset += 1
+                    byte_run(img_offset=img_offset,
+                             len=len,
+                             file_offset=file_offset))
+            else:  # sequence ends after this run
+                len = run.len - (file_offset - run.file_offset)
+                ret.append(
+                    byte_run(img_offset=img_offset,
+                             len=len,
+                             file_offset=file_offset))
     return ret

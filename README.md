@@ -12,6 +12,21 @@ This repository currently includes the following libraries:
 ```shell
 $ sudo apt-get install python-pip
 ```
+* For redaction of sequences based on regular expressions, you need the Lightgrep library, see instructions here:
+https://github.com/strozfriedberg/liblightgrep/blob/master/BUILD.md
+Note: Lightgrep builds from source and has further dependencies in turn, including GNU Bison and Boost. You must follow the instructions above.
+  * With some more recent operating systems you will need to tell the lightgrep configure script where to find Boost, like this:
+```shell
+$ ./configure --with-boost-libdir=/usr/lib/x86_64-linux-gnu
+```
+  * The lightgrep library install into /usr/local/lib, so this directory will need to be on the system's LD_LIBRARY_PATH in order for sredact to find it. Your sredact environment must include the LD_LIBRARY_PATH setting:
+```shell
+$ export LD_LIBRARY_PATH=/usr/local/lib
+```
+  * Lastly, the lightgrep.py Python API file must be downloaded and placed into the bca-redtools/libredact folder (alongside fiwalk.py and dfxml.py):
+```shell
+$ cd bca-redtools/libredact; wget https://raw.githubusercontent.com/strozfriedberg/liblightgrep/master/pylightgrep/lightgrep.py
+```
 
 # Building and installing libredact
 * Clone this repository:
