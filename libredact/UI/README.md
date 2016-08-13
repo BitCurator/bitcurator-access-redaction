@@ -1,0 +1,5 @@
+* These UI files are for reference only
+
+- attic contains a more complex UI from a previous tool for reference
+- bca-redtools-gui is a complete QtCreator project using QT5. This is where the redactwindow.ui comes from.
+- python-gui includes a copy of redactwindow.ui and RedactWindow.py (converted using pyuic5 -x redactwindow.ui -o RedactWindow.py)
