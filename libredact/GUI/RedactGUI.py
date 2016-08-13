@@ -10,6 +10,7 @@
 
 import os
 import sys, time
+import threading
 from subprocess import Popen, PIPE
 
 
@@ -25,15 +26,29 @@ class RedactGUI(QtWidgets.QMainWindow, Ui_RedactWindow):
 		# ALL CONTROL CODE GOES HERE, IN SUBSEQUENT FUNCTIONS, IN ADDITIONAL MODULES, OR MAIN! 
 		# *DO NOT* EDIT RedactWindow,py! (USE ONLY QTCREATOR TO UPDATE IT)
 
-		# Signal application exit request
+		# Connect "add" button with a custom function (addInputTextToListbox)
+		# self.addBtn.clicked.connect(self.addInputTextToListbox)
+
+		# Application exit request from "Close" button
 		self.CloseButton.clicked.connect(self.buttonClickedClose)
 
-	# Handle application exit
+		# Cancel of current run from "Cancel" button
+		self.CancelButton.clicked.connect(self.buttonClickedCancel)
+
+		# Start of current run from "Run" button
+		self.CancelButton.clicked.connect(self.buttonClickedRun)
+
+	# Handle application exit from "Close" button
 	def buttonClickedClose(self):
 		QtCore.QCoreApplication.instance().quit()
 
-		# Connect "add" button with a custom function (addInputTextToListbox)
-		# self.addBtn.clicked.connect(self.addInputTextToListbox)
+	def buttonClickedCancel(self):
+		# Fix for actual app
+		QtCore.QCoreApplication.instance().quit()
+	
+	def buttonClickedRun(self):
+		# Fix for actual app
+		QtCore.QCoreApplication.instance().quit()
 
 	#def addInputTextToListbox(self):
 		#txt = self.myTextInput.text()
