@@ -12,12 +12,12 @@ only be modified using QtCreator / Qt5, and converted using pyuic5 (per the inst
 
 The RedactWindow.py file was automatically created from redactwindow.ui using the following command:
 
-* pyuic5 -x mainwindow.ui -o MainWindow.py
+* pyuic5 -x redactwindow.ui -o RedactWindow.py
 
 # Control code
 
-All control and execution code should be placed in RedactGUI.py. RedactGUI.py can be executed
-as follows:
+All control and execution code should be placed in RedactGUI.py and/or supporting modules. 
+RedactGUI.py can be executed as follows:
 
 * python3 RedactGUI.py 
 
