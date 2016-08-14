@@ -5,6 +5,13 @@ BitCurator Access documentation is licensed under Creative Commons (CC 4.0 BY)
 2014 - 2016
 
 Releases:
+
+0.1.2 (8/13/2016)
+* Second alpha release
+ - lightgrep functionality added
+ - GUI stubbed in (not yet functional)
+ - Documentation updated, additional docs on http://access.bitcurator.net/
+
 0.1.0 (7/31/2016)
 * First alpha release
  - Core class structure and API created
