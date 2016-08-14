@@ -6,7 +6,7 @@ bca-redtools: GUI master files
 A full QtCreator project is located in UI/bca-redtools-gui. The only relevant file in that
 project is "redactwindow.ui", which is included here (in the "attic" directory) for convenient 
 reference. Do not modify redactwindow.ui or RedactWindow.py by hand! The original UI file should 
-only be modified using QtCreator / Qt5, and converted using pyuic5 (per the instructions below.
+only be modified using QtCreator / Qt5, and converted using pyuic5 (per the instructions below).
 
 # Generating RedactWindow.py
 
