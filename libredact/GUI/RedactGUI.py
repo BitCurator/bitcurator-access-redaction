@@ -13,10 +13,8 @@ import sys, time
 import threading
 from subprocess import Popen, PIPE
 
-
 from PyQt5 import QtCore, QtGui, QtWidgets
 from RedactWindow import Ui_RedactWindow
-
 
 class RedactGUI(QtWidgets.QMainWindow, Ui_RedactWindow):
 	def __init__(self):
@@ -25,9 +23,6 @@ class RedactGUI(QtWidgets.QMainWindow, Ui_RedactWindow):
 
 		# ALL CONTROL CODE GOES HERE, IN SUBSEQUENT FUNCTIONS, IN ADDITIONAL MODULES, OR MAIN! 
 		# *DO NOT* EDIT RedactWindow,py! (USE ONLY QTCREATOR TO UPDATE IT)
-
-		# Connect "add" button with a custom function (addInputTextToListbox)
-		# self.addBtn.clicked.connect(self.addInputTextToListbox)
 
 		# Application exit request from "Close" button
 		self.CloseButton.clicked.connect(self.buttonClickedClose)
@@ -38,21 +33,16 @@ class RedactGUI(QtWidgets.QMainWindow, Ui_RedactWindow):
 		# Start of current run from "Run" button
 		self.CancelButton.clicked.connect(self.buttonClickedRun)
 
-	# Handle application exit from "Close" button
 	def buttonClickedClose(self):
 		QtCore.QCoreApplication.instance().quit()
 
 	def buttonClickedCancel(self):
-		# Fix for actual app
+		# Placeholder - fix for actual app
 		QtCore.QCoreApplication.instance().quit()
 	
 	def buttonClickedRun(self):
-		# Fix for actual app
+		# Placeholder - fix for actual app
 		QtCore.QCoreApplication.instance().quit()
-
-	#def addInputTextToListbox(self):
-		#txt = self.myTextInput.text()
-		#self.listWidget.addItem(txt)
 
 if __name__ == '__main__':
 
