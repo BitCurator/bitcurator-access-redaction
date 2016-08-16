@@ -7,8 +7,8 @@ import logging
 import fiwalk
 import re
 import shutil
-from rule import redact_rule, rule_file_md5, rule_file_sha1, convert_fileglob_to_re
-from action import redact_action, _
+from .rule import redact_rule, rule_file_md5, rule_file_sha1, convert_fileglob_to_re
+from .action import redact_action, _
 
 
 class Redactor:

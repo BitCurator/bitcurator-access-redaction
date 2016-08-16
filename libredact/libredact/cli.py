@@ -23,7 +23,7 @@ Options:
   -v, --version          print version and exit
 """
 
-from redact import Redactor
+from .redact import Redactor
 import logging
 
 
