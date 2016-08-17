@@ -1,13 +1,16 @@
 bca-redtools: BitCurator Access Redaction Tools
 -----------------------------------------------
 
-Disk image and bitstream redaction tools for the BitCurator Access project.
+Disk image redaction tools developed for the BitCurator Access project.
 
 This repository currently includes the following libraries:
 
 * libredact: A Python redaction library and standalone raw disk image redaction tool. Loosely based on the iredact.py tool.
 
 # Prerequisites
+
+Note! If you're using the BitCurator environment version 1.7.28 or newer, these dependencies and environmental modifications are already installed. You can skip ahead to "Building and installing libredact".
+
 * Install PIP:
 ```shell
 $ sudo apt-get install python-pip
@@ -22,10 +25,6 @@ $ ./configure --with-boost-libdir=/usr/lib/x86_64-linux-gnu
   * The lightgrep library install into /usr/local/lib, so this directory will need to be on the system's LD_LIBRARY_PATH in order for redact-cli to find it. Your bca-redtools environment must include the LD_LIBRARY_PATH setting:
 ```shell
 $ export LD_LIBRARY_PATH=/usr/local/lib
-```
-  * Lastly, the lightgrep.py Python API file must be downloaded and placed into the bca-redtools/libredact folder (alongside fiwalk.py and dfxml.py):
-```shell
-$ cd bca-redtools/libredact; wget https://raw.githubusercontent.com/strozfriedberg/liblightgrep/master/pylightgrep/lightgrep.py
 ```
 
 # Building and installing libredact
@@ -62,7 +61,6 @@ Instructions for creating a configuration file are also available on the command
 ```shell
     $ redact-cli -H
 ```
-(Future: improve config instructions)
 
 # Using the Python module
 
@@ -70,14 +68,19 @@ All of the same functions as the command line are also available in the
 libredact module. Below is a short example Python script that uses the
 Redactor API to process a disk image.
 
-
-
 # Dependencies
 
-The redaction tool requires fiwalk, which is distributed with The Sleuth Kit (https://github.com/sleuthkit/sleuthkit).
+  * The redaction tool requires fiwalk, which is distributed with The Sleuth Kit (https://github.com/sleuthkit/sleuthkit).
+
+  * The lightgrep.py Python API file is included with this repository. Should you need to update it to match future iterations of liblightgrep, the file can be downloaded and placed into the bca-redtools/libredact folder (alongside fiwalk.py and dfxml.py) using these commands:
+```shell
+$ cd bca-redtools/libredact; wget https://raw.githubusercontent.com/strozfriedberg/liblightgrep/master/pylightgrep/lightgrep.py
+```
 
 # Licenses
 
 Project documentation and other non-software products of the BitCurator Access team and contracted partners are subject to the the Creative Commons Attribution 4.0 Unported license (CC BY 4.0).
 
 Unless otherwise indicated, software objects in this repository are distributed under the terms of the GNU General Public License, Version 3. See the text file "LICENSE" for further details about the terms of this license.
+
+The lightgrep.py Python interface to liblightgrep is included under the terms of the license for liblightgrep, namely the GNU General Public License, Version 3. (See https://github.com/strozfriedberg/liblightgrep/blob/master/COPYING for original license terms).
