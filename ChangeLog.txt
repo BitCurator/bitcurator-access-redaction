@@ -6,6 +6,15 @@ BitCurator Access documentation is licensed under Creative Commons (CC 4.0 BY)
 
 Releases:
 
+0.1.4 (8/16/2016)
+* Fourth alpha release
+ - Updated naming convention for entrypoint script
+
+0.1.4 (8/16/2016)
+* Third alpha release
+ - Fixed a minor local install issue
+ - Code preparation for future GUI
+
 0.1.2 (8/13/2016)
 * Second alpha release
  - lightgrep functionality added
