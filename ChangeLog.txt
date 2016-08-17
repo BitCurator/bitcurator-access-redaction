@@ -6,9 +6,11 @@ BitCurator Access documentation is licensed under Creative Commons (CC 4.0 BY)
 
 Releases:
 
-0.1.4 (8/16/2016)
-* Fourth alpha release
+0.1.6 (8/16/2016)
+* Fifth alpha release
+ - Now include lightgrep.py by default (original code is GPLv3)
  - Updated naming convention for entrypoint script
+ - Updated README, clarified instructions for BitCurator environment use
 
 0.1.4 (8/16/2016)
 * Third alpha release
