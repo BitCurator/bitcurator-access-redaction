@@ -15,7 +15,9 @@ Note! If you're using the BitCurator environment version 1.7.28 or newer, these 
 ```shell
 $ sudo apt-get install python-pip
 ```
-* For redaction of sequences based on regular expressions, you need the Lightgrep library, see instructions here:
+  * The redaction tool reads file system metadata from DFXML files produced by fiwalk. Fiwalk can be installed by downloading and building the latest release of The Sleuth Kit from https://github.com/sleuthkit/sleuthkit.
+
+  * For redaction of sequences based on regular expressions, you need the Lightgrep library, see instructions here:
 https://github.com/strozfriedberg/liblightgrep/blob/master/BUILD.md
 Note: Lightgrep builds from source and has further dependencies in turn, including GNU Bison and Boost. You must follow the instructions above.
   * With some more recent operating systems you will need to tell the lightgrep configure script where to find Boost, like this:
@@ -69,8 +71,6 @@ libredact module. Below is a short example Python script that uses the
 Redactor API to process a disk image. (Coming soon...)
 
 # Dependencies
-
-  * The redaction tool requires fiwalk, which is distributed with The Sleuth Kit (https://github.com/sleuthkit/sleuthkit).
 
   * The lightgrep.py Python API file is included with this repository. Should you need to update it to match future iterations of liblightgrep, the file can be downloaded and placed into the bca-redtools/libredact folder (alongside fiwalk.py and dfxml.py) using these commands:
 ```shell
