@@ -34,7 +34,7 @@ setup(name='libredact',
 
       entry_points={
         'console_scripts': [
-          'sredact = libredact.cli:main',
+          'redact-cli = libredact.cli:main',
           ],
       },
 

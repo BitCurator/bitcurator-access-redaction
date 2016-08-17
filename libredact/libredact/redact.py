@@ -51,7 +51,7 @@ class Redactor:
             }
             self.conf = schema.validate(kwargs)
         except SchemaError as e:
-            logging.warning('The sredact configuration did not validate:')
+            logging.warning('The redact-cli configuration did not validate:')
             exit(e)
         if self.conf['commit'] and 'output_file' not in self.conf.keys():
             logging.error('An output file is required when COMMIT is on.')

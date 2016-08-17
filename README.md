@@ -19,7 +19,7 @@ Note: Lightgrep builds from source and has further dependencies in turn, includi
 ```shell
 $ ./configure --with-boost-libdir=/usr/lib/x86_64-linux-gnu
 ```
-  * The lightgrep library install into /usr/local/lib, so this directory will need to be on the system's LD_LIBRARY_PATH in order for sredact to find it. Your sredact environment must include the LD_LIBRARY_PATH setting:
+  * The lightgrep library install into /usr/local/lib, so this directory will need to be on the system's LD_LIBRARY_PATH in order for redact-cli to find it. Your bca-redtools environment must include the LD_LIBRARY_PATH setting:
 ```shell
 $ export LD_LIBRARY_PATH=/usr/local/lib
 ```
@@ -45,9 +45,9 @@ $ cd libredact
 ```shell
 $ pip install -e .
 ```
-* PIP will create a executable script here: /home/youruser/.local/bin/sredact
+* PIP will create a executable script here: /home/youruser/.local/bin/redact-cli
 
-* If sredact is not on your PATH, you can add it temporarily:
+* If redact-cli is not on your PATH, you can add it temporarily:
 ```shell
 $ PATH=$PATH:/home/`whoami`/.local/bin
 ```
@@ -56,11 +56,11 @@ $ PATH=$PATH:/home/`whoami`/.local/bin
 
 The redaction tool can be run from the command line as follows:
 ```shell
-    $ sredact -h
+    $ redact-cli -h
 ```
 Instructions for creating a configuration file are also available on the command line:
 ```shell
-    $ sredact -H
+    $ redact-cli -H
 ```
 (Future: improve config instructions)
 

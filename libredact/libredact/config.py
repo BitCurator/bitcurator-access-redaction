@@ -1,4 +1,4 @@
-'''Parser(s) for sredact configuration files
+'''Parser(s) for redact-cli configuration files
 '''
 
 from libredact.rule import rule_file_md5, rule_file_sha1, rule_file_name_match, \

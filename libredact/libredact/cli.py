@@ -1,9 +1,9 @@
 """Usage:
-  sredact [-nqd] -c FILE
-  sredact [-nqd] [--input=FILE] [--output=FILE] [--dfxml=FILE] [--report=FILE] --config=FILE
-  sredact -h | --help
-  sredact -H
-  sredact -v | --version
+  redact-cli [-nqd] -c FILE
+  redact-cli [-nqd] [--input=FILE] [--output=FILE] [--dfxml=FILE] [--report=FILE] --config=FILE
+  redact-cli -h | --help
+  redact-cli -H
+  redact-cli -v | --version
 
 This program redacts a disk image file using a set of rules that describe what to redact and
 how to redact it. Prints a summary of actions taken to standard output.
@@ -28,11 +28,11 @@ import logging
 
 
 config_help = """
-sredact Configuration File Help
+redact-cli Configuration File Help
 ===============================
 
-The configuration file can specify complete instructions for how sredact runs. Arguments given on
-the command-line or in calls to the sredact API method will override settings in the configuration
+The configuration file can specify complete instructions for how redact-cli runs. Arguments given on
+the command-line or in calls to the redact-cli API method will override settings in the configuration
 file. The readaction configuration file consists of commands, one per line. Order of the commands
 does not matter.
 
