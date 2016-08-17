@@ -66,7 +66,7 @@ Instructions for creating a configuration file are also available on the command
 
 All of the same functions as the command line are also available in the
 libredact module. Below is a short example Python script that uses the
-Redactor API to process a disk image.
+Redactor API to process a disk image. (Coming soon...)
 
 # Dependencies
 
