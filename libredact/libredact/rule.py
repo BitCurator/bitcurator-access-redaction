@@ -4,7 +4,11 @@ import os
 from ctypes import *
 from dfxml import byte_run
 from contextlib import closing
-from lightgrep import Lightgrep, HitAccumulator, KeyOpts
+try:
+    from lightgrep import Lightgrep, HitAccumulator, KeyOpts
+except ImportError:
+    logging.warn('Lightgrep library not found. If you have installed it, make sure it is included'
+                 ' in LD_LIBRARY_PATH. Without lightgrep SEQ_MATCH rules will fail.')
 
 
 def convert_fileglob_to_re(fileglob):

@@ -25,9 +25,9 @@ setup(name='libredact',
       maintainer_email="bitcurator@gmail.com",
       url="https://github.com/bitcurator/bca-redtools",
       install_requires=[
-        "schema"
+        "schema", "pyqt5"
       ],
-      # packages=['bctools', ],
+      packages=['libredact', 'GUI'],
       # package_data={'bctools': ['font/*.ttf', 'font/*.txt']},
 
       py_modules=['dfxml', 'fiwalk', 'lightgrep'],
@@ -35,7 +35,8 @@ setup(name='libredact',
       entry_points={
         'console_scripts': [
           'redact-cli = libredact.cli:main',
-          ],
+          'redact-gui = GUI.RedactGUI:main',
+        ],
       },
 
       classifiers=['Development Status :: 2 - Pre-Alpha'
