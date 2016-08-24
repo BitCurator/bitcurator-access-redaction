@@ -113,7 +113,7 @@ def main():
         cfg['report_file'] = args.get('--report')
     if args.get('--dry-run'):  # if True then override COMMIT
         cfg['commit'] = False
-    cfg['detail'] = args.get('--detail')
+    # TODO cfg['detail'] = args.get('--detail')
 
     logging.debug('Combined config & arguments:\n%s' % cfg)
 
