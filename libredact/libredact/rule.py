@@ -1,6 +1,7 @@
 import re
 import mmap
 import os
+import logging
 from ctypes import *
 from dfxml import byte_run
 from contextlib import closing
@@ -18,7 +19,7 @@ def convert_fileglob_to_re(fileglob):
 
 class redact_rule:
 
-    """ Instances of this class are objects that can decide whether or not to redact."""
+    """ Instances of this class are objects that can decide what bytes to redact."""
 
     def __init__(self, line):
         self.line = line
@@ -40,7 +41,7 @@ class redact_rule:
 
 class rule_file_md5(redact_rule):
 
-    """ redact if the MD5 matches"""
+    """Redact file if the MD5 matches"""
 
     def __init__(self, line, val):
         redact_rule.__init__(self, line)
@@ -52,7 +53,7 @@ class rule_file_md5(redact_rule):
 
 class rule_file_sha1(redact_rule):
 
-    """ redact if the SHA1 matches"""
+    """Redact file if the SHA1 matches"""
 
     def __init__(self, line, val):
         redact_rule.__init__(self, line)
@@ -64,6 +65,8 @@ class rule_file_sha1(redact_rule):
 
 class rule_file_name_match(redact_rule):
 
+    """Redact the file if the name matches the pattern"""
+
     def __init__(self, line, filepat):
         redact_rule.__init__(self, line)
         # convert fileglobbing to regular expression
@@ -74,6 +77,8 @@ class rule_file_name_match(redact_rule):
 
 
 class rule_file_name_equal(redact_rule):
+
+    """Redact the file if the name equals the given string"""
 
     def __init__(self, line, filename):
         redact_rule.__init__(self, line)
@@ -89,6 +94,8 @@ class rule_file_name_equal(redact_rule):
 
 class rule_file_dirname_equal(redact_rule):
 
+    """Redact the file if the directory equals the given string"""
+
     def __init__(self, line, dirname):
         redact_rule.__init__(self, line)
         self.dirname = dirname
@@ -102,6 +109,8 @@ class rule_file_dirname_equal(redact_rule):
 
 
 class rule_file_seq_match(redact_rule):
+
+    """Redact the file if it contains a sequences matching the given pattern."""
 
     def __init__(self, line, seq_pattern):
         redact_rule.__init__(self, line)
@@ -127,14 +136,19 @@ class rule_file_seq_match(redact_rule):
 
 
 class rule_seq_match(redact_rule):
+
+    """Redacts any sequence that matches the given pattern"""
+
     lg = Lightgrep()
     accum = HitAccumulator()
 
     def __init__(self, line, lgpattern):
         redact_rule.__init__(self, line)
+        logging.debug("Creating lightgrep-based rule for pattern: "+lgpattern)
         self.lgpattern = lgpattern
         self.complete = False
-        pats = [(lgpattern, ['US-ASCII', 'UTF-8', 'UTF-16LE', 'ISO-8859-1'], KeyOpts(fixedString=False, caseInsensitive=True))]
+        pats = [(lgpattern, ['US-ASCII', 'UTF-8', 'UTF-16LE', 'ISO-8859-1'],
+                KeyOpts(fixedString=False, caseInsensitive=True))]
         prog, pmap = Lightgrep.createProgram(pats)
         self.lg.createContext(prog, pmap, self.accum.lgCallback)
 
@@ -164,54 +178,32 @@ class rule_seq_match(redact_rule):
         return get_runs_for_file_sequences(fi, red_seqs)
 
 
-class rule_file_seq_equal(redact_rule):
+class rule_file_seq_equal(rule_seq_match):
+
+    """Redacts any file containing a sequence the equals the given string"""
 
     def __init__(self, line, text):
-        redact_rule.__init__(self, line)
-        self.text = text
-
-    def should_redact(self, fileobject):
-        return self.text in fileobject.contents()
-
-
-class rule_seq_equal(redact_rule):
-
-    def __init__(self, line, text):
-        redact_rule.__init__(self, line)
-        self.text = text
-        self.complete = False           # doesn't redact the entire file
-
-    def should_redact(self, fileobject):
-        return self.text in fileobject.contents()
+        rule_seq_match.__init__(self, line, re.escape(text))
 
     def runs_to_redact(self, fi):
-        """Overridden to return the byte runs of just the given text"""
-        ret = []
-        tlen = len(self.text)
-        for run in fi.byte_runs():
-            print(run)
-            file_offset = run.file_offset
-            run_len = run.len
-            img_offset = run.img_offset
-            # (file_offset, run_len, img_offset) = run
-            run_content = fi.content_for_run(run)
-            offset = 0
-            # Now find all the places inside "run"
-            # where the text "self.text" appears
-            # print(("looking for '{}' in '{}'".format(self.text, run)))
-            while offset >= 0:
-                offset = run_content.find(self.text, offset)
-                if offset >= 0:
-                    ret.append(
-                        byte_run(img_offset=img_offset + offset,
-                                 len=tlen,
-                                 file_offset=file_offset + offset))
-                    offset += 1
-        return ret
+        """Returns the byte_runs of the source which match the rule.
+        By default this is the entire object."""
+        return fi.byte_runs()
+
+
+class rule_seq_equal(rule_seq_match):
+
+    """Redacts a given sequence (string) anywhere it appears in the image"""
+
+    def __init__(self, line, text):
+        rule_seq_match.__init__(self, line, re.escape(text))
 
 
 def get_runs_for_file_sequences(fi, file_sequences):
-    '''Takes a list of tuples containing start, end file offsets'''
+
+    '''Converts a list of file offsets into a list of image byte runs. Takes a list of tuples
+    containing start, end file offsets'''
+
     ret = []
     for start, end in file_sequences:
         for run in fi.byte_runs():

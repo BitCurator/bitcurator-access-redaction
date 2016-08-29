@@ -25,7 +25,7 @@ setup(name='libredact',
       maintainer_email="bitcurator@gmail.com",
       url="https://github.com/bitcurator/bca-redtools",
       install_requires=[
-        "schema", "pyqt5"
+        "schema"  # , "PyQt5"
       ],
       packages=['libredact', 'GUI'],
       # package_data={'bctools': ['font/*.ttf', 'font/*.txt']},

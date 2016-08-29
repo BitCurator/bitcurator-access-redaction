@@ -1,12 +1,12 @@
 import unittest
 from libredact import config, cli
 from libredact.redact import Redactor
-import StringIO
+from io import StringIO
 import hashlib
 from contextlib import closing
+import logging
 
-
-config_string = """
+config_string = u"""
 INPUT_FILE /home/bcadmin/Desktop/jowork.raw
 DFXML_FILE /home/bcadmin/Desktop/jofiwalk.xml
 OUTPUT_FILE /tmp/jowork.raw
@@ -40,7 +40,7 @@ IGNORE *.DOCX
 
 class RedactTest(unittest.TestCase):
     def test_config_parse(self):
-        config_in = StringIO.StringIO(config_string)
+        config_in = StringIO(config_string)
         result = config.parsehandle(config_in)
         self.assertEqual(len(result['rules']), 7)
         self.assertEqual(len(result['ignore_patterns']), 2)
@@ -52,7 +52,7 @@ class RedactTest(unittest.TestCase):
 
         """ Tests that redaction based on file content is achieved on first pass. """
 
-        content_rules = """
+        content_rules = u"""
 # Targets Dorian Gray.txt
 FILE_MD5 114583cd8355334071e9343a929f6f7c FILL 0x44
 
@@ -70,7 +70,7 @@ FILE_SEQ_EQUAL pineapple-upside-down-cake SCRUB
 # Ignore EATME.TXT.BACKUP
 IGNORE *.BACKUP
 """
-        config_in = StringIO.StringIO(content_rules)
+        config_in = StringIO(content_rules)
         cfg = config.parsehandle(config_in)
         cfg['commit'] = True
         import os
@@ -86,7 +86,7 @@ IGNORE *.BACKUP
         self.assertEqual(os.path.isfile(output_file), True)
 
         # Second redaction processes the output file again, to verify no further changes.
-        config_in2 = StringIO.StringIO(content_rules)
+        config_in2 = StringIO(content_rules)
         cfg2 = config.parsehandle(config_in2)
         cfg2['commit'] = True
         md5sum1 = md5sum(output_file)
@@ -115,11 +115,13 @@ def md5sum(filename):
 
 
 def file_lines(fname):
+    r = 0
     with open(fname) as f:
         for i, l in enumerate(f):
-            pass
-    return i + 1
+            ++r
+    return r + 1
 
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.DEBUG)
     unittest.main()

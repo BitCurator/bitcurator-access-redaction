@@ -61,6 +61,8 @@ class Redactor:
         logging.debug('Configuration:\n%s' % self.conf)
 
         self.input_file = self.conf['input_file']
+        from os import path
+        self.image_size = path.getsize(self.input_file.name)
         self.output_file = self.conf['output_file']
         self.report_file = self.conf['report_file']
         self.dfxml_file = self.conf['dfxml_file']
@@ -96,9 +98,14 @@ class Redactor:
         if self.should_ignore(fileinfo):
             logging.info("Ignoring %s" % fileinfo.filename())
             return
+
+        # logging.debug("Stage 2 processing file: "+fileinfo.filename())
         for (rule, action) in self.conf['rules']:
+            # logging.debug("processing rule: " + rule.line)
             if rule.should_redact(fileinfo):
+                logging.debug("should redact file: "+fileinfo.filename())
                 action.redact(rule, fileinfo, self.output_file, self.commit)
+                logging.debug("redacted file: "+fileinfo.filename())
                 if rule.complete:
                     return  # only need to redact once!
 
@@ -115,9 +122,10 @@ class Redactor:
             logging.warning("Commit is OFF. Performing dry-run only..")
         if self.report_logger is not None:
             logtext = ''
-            for key, value in self.conf.iteritems():
-                logtext += key + ': ' + str(value) + '  '
-            self.report_logger.info(_({'config': logtext}))
+            # for key, value in self.conf.items():
+            # logtext += key + ': ' + str(value) + '  '
+            # self.report_logger.info(_({'config': logtext}))
+        logging.debug('DEBUG OUTPUT IS ON')
         # Copy input_file to output_file
         if not self.output_file.closed:
             self.output_file.close()
