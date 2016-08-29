@@ -10,11 +10,6 @@ Do not modify dfxml.py or fiwalk.py. These files have been included here for con
 There are unit tests in the test module. These are written against redaction
 configurations that are inline, in the test/main.py program. You can run the tests as follows:
 
-1. Source the virtual environment:
-```shell
-    $ source bca-redtools/env/bin/activate
-```
-
 1. Change to code directory:
 ```shell
     $ cd bca-redtools/libredact

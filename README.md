@@ -11,7 +11,7 @@ This repository currently includes the following libraries:
 
 Note! If you're using the BitCurator environment version 1.7.28 or newer, these dependencies and environmental modifications are already installed. You can skip ahead to "Building and installing libredact".
 
-* Install PIP:
+  * Install PIP:
 ```shell
 $ sudo apt-get install python-pip
 ```
