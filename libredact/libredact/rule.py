@@ -139,12 +139,11 @@ class rule_seq_match(redact_rule):
 
     """Redacts any sequence that matches the given pattern"""
 
-    self.lg = Lightgrep()
-    self.accum = HitAccumulator()
-
     def __init__(self, line, lgpattern):
         redact_rule.__init__(self, line)
         logging.debug("Creating lightgrep-based rule for pattern: "+lgpattern)
+        self.lg = Lightgrep()
+        self.accum = HitAccumulator()
         self.lgpattern = lgpattern
         self.complete = False
         pats = [(lgpattern, ['US-ASCII', 'UTF-8', 'UTF-16LE', 'ISO-8859-1'],
