@@ -139,8 +139,8 @@ class rule_seq_match(redact_rule):
 
     """Redacts any sequence that matches the given pattern"""
 
-    lg = Lightgrep()
-    accum = HitAccumulator()
+    self.lg = Lightgrep()
+    self.accum = HitAccumulator()
 
     def __init__(self, line, lgpattern):
         redact_rule.__init__(self, line)
