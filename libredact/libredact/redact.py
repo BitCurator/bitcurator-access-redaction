@@ -62,10 +62,10 @@ class Redactor:
         logging.debug('Configuration:\n%s' % self.conf)
 
         # Print rules
-        logging.debug(json.dumps(map(lambda (x, y): (x.line,
-                                                     x.__class__.__name__,
-                                                     y.__class__.__name__,
-                                                     x.lgpattern if hasattr(x, 'lgpattern') else ''),
+        logging.debug(json.dumps(map(lambda x, y: (x.line,
+                                                   x.__class__.__name__,
+                                                   y.__class__.__name__,
+                                                   x.lgpattern if hasattr(x, 'lgpattern') else ''),
                                      self.conf['rules']),
                                  indent=4))
 
