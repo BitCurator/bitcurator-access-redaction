@@ -6,6 +6,7 @@ Redacts disk images according to the given configuration.
 import logging
 import fiwalk
 import re
+import json
 import shutil
 from .rule import redact_rule, rule_file_md5, rule_file_sha1, convert_fileglob_to_re
 from .action import redact_action, _
@@ -51,7 +52,7 @@ class Redactor:
             }
             self.conf = schema.validate(kwargs)
         except SchemaError as e:
-            logging.warning('The redact-cli configuration did not validate:')
+            logging.warning('The redact configuration did not validate:')
             exit(e)
         if self.conf['commit'] and 'output_file' not in self.conf.keys():
             logging.error('An output file is required when COMMIT is on.')
@@ -59,6 +60,14 @@ class Redactor:
         # TODO Check input and output are not same file
 
         logging.debug('Configuration:\n%s' % self.conf)
+
+        # Print rules
+        logging.debug(json.dumps(map(lambda (x, y): (x.line,
+                                                     x.__class__.__name__,
+                                                     y.__class__.__name__,
+                                                     x.lgpattern if hasattr(x, 'lgpattern') else ''),
+                                     self.conf['rules']),
+                                 indent=4))
 
         self.input_file = self.conf['input_file']
         from os import path
@@ -95,17 +104,22 @@ class Redactor:
 
     def process_file(self, fileinfo):
         # logging.debug("Processing file: %s" % fileinfo.filename())
-        if self.should_ignore(fileinfo):
+        if fileinfo.is_dir() or fileinfo.filename().startswith('$') or self.should_ignore(fileinfo):
             logging.info("Ignoring %s" % fileinfo.filename())
             return
+
+        if fileinfo.filename().startswith('.goutputstream'):
+            logging.debug('got a .goutputstream file in meta_type: '+str(fileinfo.meta_type()))
+            logging.debug('.goutputstream file length: '+str(fileinfo.filesize()))
+            logging.debug('contents: '+fileinfo.contents())
 
         # logging.debug("Stage 2 processing file: "+fileinfo.filename())
         for (rule, action) in self.conf['rules']:
             # logging.debug("processing rule: " + rule.line)
             if rule.should_redact(fileinfo):
-                logging.debug("should redact file: "+fileinfo.filename())
+                # logging.debug("should redact file: "+fileinfo.filename())
                 action.redact(rule, fileinfo, self.output_file, self.commit)
-                logging.debug("redacted file: "+fileinfo.filename())
+                # logging.debug("redacted file: "+fileinfo.filename())
                 if rule.complete:
                     return  # only need to redact once!
 

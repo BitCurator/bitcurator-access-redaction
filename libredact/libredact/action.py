@@ -8,7 +8,7 @@ class StructuredMessage(object):
         self.data = data
 
     def __str__(self):
-        return '%s' % json.dumps(self.data)
+        return '%s' % json.dumps(self.data, indent=4)
 
 _ = StructuredMessage   # to improve readability
 audit_logger = logging.getLogger('audit_report')

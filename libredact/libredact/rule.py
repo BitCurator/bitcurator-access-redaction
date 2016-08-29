@@ -159,12 +159,12 @@ class rule_seq_match(redact_rule):
         """Overridden to return the byte runs of just the given text"""
         red_seqs = []
         for h in self.accum.Hits:
-            print("hit at (%s, %s) on keyindex %s, pattern is '%s' with encoding chain '%s'" %
-                  (str(h.get("start")),
-                   str(h.get("end")),
-                   str(h.get("keywordIndex")),
-                   h.get("pattern"),
-                   h.get("encChain")))
+            # print("hit at (%s, %s) on keyindex %s, pattern is '%s' with encoding chain '%s'" %
+            #       (str(h.get("start")),
+            #        str(h.get("end")),
+            #        str(h.get("keywordIndex")),
+            #        h.get("pattern"),
+            #        h.get("encChain")))
             new = True
             for seq in red_seqs:
                 if seq[0] == h['start'] and seq[1] == h['end']:
