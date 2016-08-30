@@ -116,6 +116,9 @@ def parse_abe(filepath):
         if line == "":
             continue
         atoms = line.split("\t")
+        if len(atoms) < 5:
+            import logging
+            logging.debug(line)
         rule = rule_file_md5(line, atoms[4])
         result.append((rule, action_scrub()))
     return result
