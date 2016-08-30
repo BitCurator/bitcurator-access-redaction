@@ -84,7 +84,7 @@ class RedactGUI(QtWidgets.QMainWindow, Ui_RedactWindow):
         QtCore.QCoreApplication.instance().quit()
 
 
-if __name__ == '__main__':
+def main():
 
     app = QtWidgets.QApplication(sys.argv)
 
