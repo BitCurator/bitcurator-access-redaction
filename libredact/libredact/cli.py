@@ -1,6 +1,6 @@
 """Usage:
   redact-cli [-nqd] -c FILE
-  redact-cli [-nqd] [--input=FILE] [--output=FILE] [--dfxml=FILE] [--report=FILE] --config=FILE
+  redact-cli [-nqd] [--input=FILE] [--output=FILE] [--dfxml=FILE] [--report=FILE] [--abe-config=FILE] --config=FILE
   redact-cli -h | --help
   redact-cli -H
   redact-cli -v | --version
@@ -10,6 +10,7 @@ how to redact it. Prints a summary of actions taken to standard output.
 
 Options:
   -c, --config=FILE      configuration file specifies redaction settings (see -H for details)
+  -abe-config=FILE       also scrub files indicated in an annotated bulk extrator feature file
   -i, --input=FILE       disk image file to redact (or use file specified by --config)
   -o, --output=FILE      file location for output redacted image file (required for COMMIT)
   --dfxml=FILE           previously generated dfxml file (or use file specified by --config)
@@ -57,9 +58,9 @@ Target Conditions:
   FILE_MD5 <md5> - target any file with the given md5
   FILE_SHA1 <sha1> - target any file with the given sha1
   FILE_SEQ_EQUAL <string> - target any file that contains <a string>
-  (not implemented) FILE_SEQ_MATCH <pattern> - target any file that contains a sequence matching <a pattern>
+  FILE_SEQ_MATCH <pattern> - target any file that contains a sequence matching <a pattern>
   SEQ_EQUAL <string> - target any sequences equal to <a string>
-  (not implemented) SEQ_MATCH <pattern> - target any sequences matching <a pattern>
+  SEQ_MATCH <pattern> - target any sequences matching <a pattern>
 
 Actions:
   SCRUB        overwrite the bytes in the target with zeroes
@@ -99,7 +100,7 @@ def main():
     logging.basicConfig(level=log_level)
 
     # Read the redaction configuration file
-    from libredact.config import parse
+    from libredact.config import parse, parse_abe
     cfg = parse(args.get('--config'))
 
     # Override any CLI arguments
@@ -113,6 +114,10 @@ def main():
         cfg['report_file'] = args.get('--report')
     if args.get('--dry-run'):  # if True then override COMMIT
         cfg['commit'] = False
+    if args.get('--abe-config'):
+        abe_rules = parse_abe(args.get('--abe-config'))
+        cfg['rules'].extend(abe_rules)
+
     # TODO cfg['detail'] = args.get('--detail')
 
     logging.debug('Combined config & arguments:\n%s' % cfg)

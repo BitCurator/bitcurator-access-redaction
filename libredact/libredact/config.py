@@ -104,3 +104,18 @@ def parsehandle(handle):
 
         result.get('rules').append((rule, action))
     return result
+
+
+def parse_abe(filepath):
+    handle = open(filepath, "r")
+    result = []
+    for line in handle:
+        if line[0] in '#;':
+            continue       # comment line
+        line = line.strip()
+        if line == "":
+            continue
+        atoms = line.split("\t")
+        rule = rule_file_md5(line, atoms[4])
+        result.append((rule, action_scrub()))
+    return result
