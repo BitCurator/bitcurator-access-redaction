@@ -8,9 +8,9 @@ first = True
 
 class MyEncoder(JSONEncoder):
     def default(self, o):
-        if isinstance(redact_rule, o):
+        if isinstance(o, redact_rule):
             return {'rule': o.line}
-        elif isinstance(redact_action):
+        elif isinstance(o, redact_action):
             return {'action': o.__class__.__name__}
         return o.__dict__
 
