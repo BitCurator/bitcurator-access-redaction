@@ -105,7 +105,7 @@ def main():
 
     # Override any CLI arguments
     if args.get('--input'):
-        cfg['image_file'] = args.get('--input')
+        cfg['input_file'] = args.get('--input')
     if args.get('--output'):
         cfg['output_file'] = args.get('--output')
     if args.get('--dfxml'):
