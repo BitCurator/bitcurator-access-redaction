@@ -6,10 +6,12 @@ Redacts disk images according to the given configuration.
 import logging
 import fiwalk
 import re
-import json
 import shutil
 from .rule import redact_rule, rule_file_md5, rule_file_sha1, convert_fileglob_to_re
 from .action import redact_action, _
+
+
+first = True
 
 
 class Redactor:
@@ -57,7 +59,6 @@ class Redactor:
         if self.conf['commit'] and 'output_file' not in self.conf.keys():
             logging.error('An output file is required when COMMIT is on.')
             exit(1)
-        # TODO Check input and output are not same file
 
         self.input_file = self.conf['input_file']
         from os import path
@@ -103,13 +104,15 @@ class Redactor:
             logging.debug('.goutputstream file length: '+str(fileinfo.filesize()))
             logging.debug('contents: '+fileinfo.contents())
 
-        # logging.debug("Stage 2 processing file: "+fileinfo.filename())
         for (rule, action) in self.conf['rules']:
-            # logging.debug("processing rule: " + rule.line)
             if rule.should_redact(fileinfo):
-                # logging.debug("should redact file: "+fileinfo.filename())
+                global first
+                if self.report_logger is not None:
+                    if first:
+                        first = False
+                    else:
+                        self.report_logger.info(',')
                 action.redact(rule, fileinfo, self.output_file, self.commit)
-                # logging.debug("redacted file: "+fileinfo.filename())
                 if rule.complete:
                     return  # only need to redact once!
 

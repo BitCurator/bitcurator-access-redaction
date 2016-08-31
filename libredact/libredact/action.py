@@ -20,13 +20,7 @@ class StructuredMessage(object):
         self.data = data
 
     def __str__(self):
-        msg = json.dumps(self.data, indent=4, cls=MyEncoder)
-        global first
-        if first:
-            first = False
-            return '%s' % msg
-        else:
-            return ',\n%s' % msg
+        return json.dumps(self.data, indent=4, cls=MyEncoder)
 
 
 _ = StructuredMessage   # to improve readability

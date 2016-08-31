@@ -5,11 +5,13 @@ from io import StringIO
 import hashlib
 from contextlib import closing
 import logging
+import json
 
 config_string = u"""
 INPUT_FILE /home/bcadmin/Desktop/jowork.raw
 DFXML_FILE /home/bcadmin/Desktop/jofiwalk.xml
 OUTPUT_FILE /tmp/jowork.raw
+REPORT_FILE /tmp/test_report.json
 
 # Targets The Whale.txt
 FILE_NAME_MATCH *Whale.txt FUZZ
@@ -42,10 +44,11 @@ class RedactTest(unittest.TestCase):
     def test_config_parse(self):
         config_in = StringIO(config_string)
         result = config.parsehandle(config_in)
-        self.assertEqual(len(result['rules']), 7)
+        self.assertEqual(len(result['rules']), 8)
         self.assertEqual(len(result['ignore_patterns']), 2)
         self.assertEqual(result['input_file'], "/home/bcadmin/Desktop/jowork.raw")
         self.assertEqual(result['dfxml_file'], "/home/bcadmin/Desktop/jofiwalk.xml")
+        self.assertEqual(result['report_file'], "/tmp/test_report.json")
         self.assertEqual(result['output_file'], "/tmp/jowork.raw")
 
     def test_lib(self):
@@ -80,11 +83,21 @@ IGNORE *.BACKUP
         cfg['dfxml_file'] = None
         output_file = '/tmp/output_image.raw'
         cfg['output_file'] = output_file
+        report_file = '/tmp/report_file.json'
+        cfg['report_file'] = report_file
         redactor = Redactor(**cfg)
         # First redaction verifies an output file
         redactor.execute()
         self.assertEqual(os.path.isfile(output_file), True)
 
+        # TODO verify report is json
+        report_dict = None
+        try:
+            handle = open(report_file, "r")
+            report_dict = json.load(handle)
+        except AttributeError as e:
+            logging.debug(e)
+        self.assertNotEqual(report_dict, None)
         # Second redaction processes the output file again, to verify no further changes.
         config_in2 = StringIO(content_rules)
         cfg2 = config.parsehandle(config_in2)
