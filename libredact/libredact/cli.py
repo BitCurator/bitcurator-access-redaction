@@ -118,11 +118,5 @@ def main():
     # TODO cfg['detail'] = args.get('--detail')
 
     logging.debug('Combined config & arguments:\n%s' % cfg)
-
     redactor = Redactor(**cfg)
-
-    import time
-    t0 = time.time()
     redactor.execute()
-    t1 = time.time()
-    logging.info("Time to run: %d seconds" % (t1 - t0))

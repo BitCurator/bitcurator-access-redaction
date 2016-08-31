@@ -9,7 +9,7 @@ import re
 import json
 import shutil
 from .rule import redact_rule, rule_file_md5, rule_file_sha1, convert_fileglob_to_re
-from .action import redact_action, endAuditLog
+from .action import redact_action, _
 
 
 class Redactor:
@@ -17,6 +17,7 @@ class Redactor:
     image = None
     report = None
     commit = False
+    kwargs = {}
 
     def __init__(self, input_file=None, output_file=None, dfxml_file=None, report_file=None,
                  commit=False, ignore_patterns=[], rules=[]):
@@ -38,17 +39,18 @@ class Redactor:
                 Use(lambda f: re.compile(convert_fileglob_to_re('|'.join(f))),
                     error='Cannot compile unified ignore regex'),
             'rules': And([(redact_rule, redact_action)], lambda f: len(f) > 0)})
+
+        self.kwargs = {
+            'input_file': input_file,
+            'output_file': output_file,
+            'dfxml_file': dfxml_file,
+            'report_file': report_file,
+            'commit': commit,
+            'ignore_patterns': ignore_patterns,
+            'rules': rules
+        }
         try:
-            kwargs = {
-                'input_file': input_file,
-                'output_file': output_file,
-                'dfxml_file': dfxml_file,
-                'report_file': report_file,
-                'commit': commit,
-                'ignore_patterns': ignore_patterns,
-                'rules': rules
-            }
-            self.conf = schema.validate(kwargs)
+            self.conf = schema.validate(self.kwargs)
         except SchemaError as e:
             logging.warning('The redact configuration did not validate:')
             exit(e)
@@ -57,8 +59,7 @@ class Redactor:
             exit(1)
         # TODO Check input and output are not same file
 
-        logging.debug('Configuration:\n%s' % self.conf)
-
+        self.configure_report_logger()
         # Print rules
         # logging.debug(json.dumps(map(lambda x, y: (x.line,
         #                                            x.__class__.__name__,
@@ -74,7 +75,6 @@ class Redactor:
         self.report_file = self.conf['report_file']
         self.dfxml_file = self.conf['dfxml_file']
         self.commit = self.conf['commit']
-        self.configure_report_logger()
 
     def need_md5(self):
         for (rule, action) in self.conf['rules']:
@@ -126,6 +126,7 @@ class Redactor:
             if f and f.closed is False:
                 logging.debug("Closing file: %s" % f.name)
                 f.close()
+        logging.debug("files closed")
 
     def execute(self):
         if self.conf.get('commit'):
@@ -133,17 +134,19 @@ class Redactor:
         else:
             logging.warning("Commit is OFF. Performing dry-run only..")
         if self.report_logger is not None:
-            logtext = ''
-            # TODO output the effective configuration
-            # for key, value in self.conf.items():
-            # logtext += key + ': ' + str(value) + '  '
-            # self.report_logger.info(_({'config': logtext}))
+            self.report_logger.info('{')
+            self.report_logger.info('"configuration": ')
+            self.report_logger.info(_(self.kwargs))
+            self.report_logger.info(',')
+            self.report_logger.info('"redactions": [')
         logging.debug('DEBUG OUTPUT IS ON')
         # Copy input_file to output_file
         if not self.output_file.closed:
             self.output_file.close()
         if not self.input_file.closed:
             self.input_file.close()
+        import time
+        t0 = time.time()  # start a timer
         shutil.copy(self.input_file.name, self.output_file.name)
         self.output_file = open(self.output_file.name, 'r+')
         self.input_file = open(self.input_file.name, 'r')
@@ -153,8 +156,13 @@ class Redactor:
             xmlfile=self.dfxml_file,
             callback=self.process_file)
         self.close_files()
-        endAuditLog()
-        logging.warn("files closed")
+
+        elapsed = time.time() - t0
+        logging.debug("Time to run: %d seconds" % elapsed)
+        if self.report_logger is not None:
+            self.report_logger.info('],')
+            self.report_logger.info('"runtime": %d' % elapsed)
+            self.report_logger.info('}')
 
     def configure_report_logger(self):
         logger = logging.getLogger('audit_report')

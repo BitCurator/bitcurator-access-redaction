@@ -23,10 +23,6 @@ _ = StructuredMessage   # to improve readability
 audit_logger = logging.getLogger('audit_report')
 
 
-def endAuditLog():
-    audit_logger.info("]")
-
-
 class redact_action():
     def log(self, fileinfo, rule, commit, rundata):
         data = {}
