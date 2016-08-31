@@ -9,7 +9,7 @@ import re
 import json
 import shutil
 from .rule import redact_rule, rule_file_md5, rule_file_sha1, convert_fileglob_to_re
-from .action import redact_action, _
+from .action import redact_action, endAuditLog
 
 
 class Redactor:
@@ -134,6 +134,7 @@ class Redactor:
             logging.warning("Commit is OFF. Performing dry-run only..")
         if self.report_logger is not None:
             logtext = ''
+            # TODO output the effective configuration
             # for key, value in self.conf.items():
             # logtext += key + ': ' + str(value) + '  '
             # self.report_logger.info(_({'config': logtext}))
@@ -152,18 +153,20 @@ class Redactor:
             xmlfile=self.dfxml_file,
             callback=self.process_file)
         self.close_files()
+        endAuditLog()
         logging.warn("files closed")
 
     def configure_report_logger(self):
         logger = logging.getLogger('audit_report')
         logger.setLevel(logging.INFO)
+        logger.propagate = False
 
         # create file handler which logs even debug messages
         if self.report_file is None:
             fh = logging.NullHandler()
         else:
             fh = logging.FileHandler(self.report_file)
-        fh.setLevel(logging.DEBUG)
+            fh.setLevel(logging.DEBUG)
 
         # create formatter and add it to the handlers
         formatter = logging.Formatter('%(message)s')

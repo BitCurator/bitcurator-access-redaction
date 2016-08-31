@@ -2,16 +2,29 @@
 import json
 import logging
 
+first = True
+
 
 class StructuredMessage(object):
     def __init__(self, data):
         self.data = data
 
     def __str__(self):
-        return '%s' % json.dumps(self.data, indent=4)
+        msg = json.dumps(self.data, indent=4)
+        global first
+        if first:
+            first = False
+            return '[\n%s,' % msg
+        else:
+            return '%s,' % msg
+
 
 _ = StructuredMessage   # to improve readability
 audit_logger = logging.getLogger('audit_report')
+
+
+def endAuditLog():
+    audit_logger.info("]")
 
 
 class redact_action():
