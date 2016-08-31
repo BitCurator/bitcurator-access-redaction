@@ -20,7 +20,7 @@ class StructuredMessage(object):
         self.data = data
 
     def __str__(self):
-        msg = json.dumps(self.data, indent=4)
+        msg = json.dumps(self.data, indent=4, cls=MyEncoder)
         global first
         if first:
             first = False
