@@ -125,4 +125,4 @@ def main():
     t0 = time.time()
     redactor.execute()
     t1 = time.time()
-    print("Time to run: %d seconds" % (t1 - t0))
+    logging.info("Time to run: %d seconds" % (t1 - t0))
