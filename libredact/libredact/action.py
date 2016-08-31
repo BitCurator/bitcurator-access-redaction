@@ -14,9 +14,9 @@ class StructuredMessage(object):
         global first
         if first:
             first = False
-            return '[\n%s,' % msg
+            return '[\n%s' % msg
         else:
-            return '%s,' % msg
+            return ', %s' % msg
 
 
 _ = StructuredMessage   # to improve readability
