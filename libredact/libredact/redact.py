@@ -19,7 +19,7 @@ class Redactor:
     commit = False
 
     def __init__(self, input_file=None, output_file=None, dfxml_file=None, report_file=None,
-                 commit=False, ignore_patterns=[], key=None, rules=[]):
+                 commit=False, ignore_patterns=[], rules=[]):
         #  Validate configuration
         from schema import Schema, Optional, Or, Use, And, SchemaError
         schema = Schema({
@@ -37,7 +37,6 @@ class Redactor:
             'ignore_patterns':
                 Use(lambda f: re.compile(convert_fileglob_to_re('|'.join(f))),
                     error='Cannot compile unified ignore regex'),
-            'key': Or(None, str),
             'rules': And([(redact_rule, redact_action)], lambda f: len(f) > 0)})
         try:
             kwargs = {
@@ -47,7 +46,6 @@ class Redactor:
                 'report_file': report_file,
                 'commit': commit,
                 'ignore_patterns': ignore_patterns,
-                'key': key,
                 'rules': rules
             }
             self.conf = schema.validate(kwargs)

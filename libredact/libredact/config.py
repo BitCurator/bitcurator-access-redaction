@@ -13,13 +13,14 @@ def parse(filepath):
 
 
 def parsehandle(handle):
+    '''This method is separated from the file-base parse method above for the purpose of testing,
+    using inline strings as configuration.'''
     result = {
       'rules': [],
       'commit': False,
       'input_file': None,
       'dfxml_file': None,
       'report_file': None,
-      'key': None,
       'ignore_patterns': []
     }
 
@@ -37,10 +38,6 @@ def parsehandle(handle):
         action = None
 
         # First look for simple commands
-        if cmd == 'KEY':
-            result['key'] = atoms[1]
-            continue
-
         if cmd == "COMMIT":
             result['commit'] = True
             continue
@@ -89,8 +86,6 @@ def parsehandle(handle):
         if rule:
             if atoms[2].upper() == 'FILL':
                 action = action_fill(eval(atoms[3]))
-            # if atoms[2].upper() == 'ENCRYPT':
-            #    action = action_encrypt()
             if atoms[2].upper() == 'FUZZ':
                 action = action_fuzz()
             if atoms[2].upper() == 'SCRUB':
@@ -103,22 +98,4 @@ def parsehandle(handle):
             raise ValueError("Cannot parse: '%s'" % line)
 
         result.get('rules').append((rule, action))
-    return result
-
-
-def parse_abe(filepath):
-    handle = open(filepath, "r")
-    result = []
-    for line in handle:
-        if line[0] in '#;':
-            continue       # comment line
-        line = line.strip()
-        if line == "":
-            continue
-        atoms = line.split("\t")
-        if len(atoms) < 5:
-            import logging
-            logging.debug(line)
-        rule = rule_file_md5(line, atoms[4])
-        result.append((rule, action_scrub()))
     return result

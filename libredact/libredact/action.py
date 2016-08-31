@@ -73,20 +73,6 @@ class action_fill(redact_action):
         return 'Fill with %s' % hex(self.fillvalue)
 
 
-class action_encrypt(redact_action):
-
-    """ Perform redaction by encrypting"""
-
-    def redact(self, rule, fi, imagefile, commit):
-        runlist = []
-        for run in rule.runs_to_redact(fi):
-            raise ValueError("Whoops; Didn't write this yet")
-            runlist.append({'file_offset': run.file_offset,
-                            'image_offset': run.img_offset,
-                            'length': run.len})
-        self.log(fi, rule, commit, runlist)
-
-
 class action_fuzz(redact_action):
 
     """ Perform redaction by fuzzing x86 instructions """

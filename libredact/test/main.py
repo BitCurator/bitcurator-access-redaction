@@ -23,7 +23,7 @@ FILE_SHA1 7f9f0286e16e9c74c992e682e27487a9eb691e86 FILL 0x44
 # Fill Kafka sequences in Metamorphsis.txt with K
 SEQ_EQUAL Kafka FILL 0x4B
 
-# FILE_SEQ_MATCH \d{3}-?\d{2}-?\d{4} FILL 0x44
+FILE_SEQ_MATCH \d{3}-?\d{2}-?\d{4} FILL 0x44
 SEQ_MATCH \d{3}-?\d{2}-?\d{4} FILL 0x44
 
 # Scrub EATME.TXT

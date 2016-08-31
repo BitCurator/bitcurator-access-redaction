@@ -1,6 +1,6 @@
 """Usage:
   redact-cli [-nqd] -c FILE
-  redact-cli [-nqd] [--input=FILE] [--output=FILE] [--dfxml=FILE] [--report=FILE] [--abe-config=FILE] --config=FILE
+  redact-cli [-nqd] [--input=FILE] [--output=FILE] [--dfxml=FILE] [--report=FILE] --config=FILE
   redact-cli -h | --help
   redact-cli -H
   redact-cli -v | --version
@@ -10,7 +10,6 @@ how to redact it. Prints a summary of actions taken to standard output.
 
 Options:
   -c, --config=FILE      configuration file specifies redaction settings (see -H for details)
-  -abe-config=FILE       also scrub files indicated in an annotated bulk extrator feature file
   -i, --input=FILE       disk image file to redact (or use file specified by --config)
   -o, --output=FILE      file location for output redacted image file (required for COMMIT)
   --dfxml=FILE           previously generated dfxml file (or use file specified by --config)
@@ -18,11 +17,12 @@ Options:
   -n, --dry-run          creates report without taking action ( overrides COMMIT in --config)
   -q, --quiet            quiet mode (no console output unless errors occur)
   -d, --detail           detail mode, prints individual actions taken (or planned in dry runs)
-  -p, --progress=FILE    writes progress to the stdout or a file, if specified
   -h, --help             show this usage information
   -H, --chelp            show configuration help
   -v, --version          print version and exit
 """
+#  -p, --progress=FILE    writes progress to the stdout or a file, if specified
+
 
 from .redact import Redactor
 import logging
@@ -33,7 +33,7 @@ redact-cli Configuration File Help
 ===============================
 
 The configuration file can specify complete instructions for how redact-cli runs. Arguments given on
-the command-line or in calls to the redact-cli API method will override settings in the configuration
+the command-line or calls to the redact-cli API method will override settings in the configuration
 file. The readaction configuration file consists of commands, one per line. Order of the commands
 does not matter.
 
@@ -100,7 +100,7 @@ def main():
     logging.basicConfig(level=log_level)
 
     # Read the redaction configuration file
-    from libredact.config import parse, parse_abe
+    from libredact.config import parse
     cfg = parse(args.get('--config'))
 
     # Override any CLI arguments
@@ -114,9 +114,6 @@ def main():
         cfg['report_file'] = args.get('--report')
     if args.get('--dry-run'):  # if True then override COMMIT
         cfg['commit'] = False
-    if args.get('--abe-config'):
-        abe_rules = parse_abe(args.get('--abe-config'))
-        cfg['rules'].extend(abe_rules)
 
     # TODO cfg['detail'] = args.get('--detail')
 
