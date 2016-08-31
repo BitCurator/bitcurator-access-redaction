@@ -1,8 +1,18 @@
-# import hashlib
 import json
 import logging
+from json import JSONEncoder
+from .rule import redact_rule
 
 first = True
+
+
+class MyEncoder(JSONEncoder):
+    def default(self, o):
+        if isinstance(redact_rule, o):
+            return {'rule': o.line}
+        elif isinstance(redact_action):
+            return {'action': o.__class__.__name__}
+        return o.__dict__
 
 
 class StructuredMessage(object):
@@ -14,9 +24,9 @@ class StructuredMessage(object):
         global first
         if first:
             first = False
-            return '[\n%s' % msg
+            return '%s' % msg
         else:
-            return ', %s' % msg
+            return ',\n%s' % msg
 
 
 _ = StructuredMessage   # to improve readability
