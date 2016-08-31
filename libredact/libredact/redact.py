@@ -59,15 +59,6 @@ class Redactor:
             exit(1)
         # TODO Check input and output are not same file
 
-        self.configure_report_logger()
-        # Print rules
-        # logging.debug(json.dumps(map(lambda x, y: (x.line,
-        #                                            x.__class__.__name__,
-        #                                            y.__class__.__name__,
-        #                                          x.lgpattern if hasattr(x, 'lgpattern') else ''),
-        #                              self.conf['rules']),
-        #                          indent=4))
-
         self.input_file = self.conf['input_file']
         from os import path
         self.image_size = path.getsize(self.input_file.name)
@@ -75,6 +66,7 @@ class Redactor:
         self.report_file = self.conf['report_file']
         self.dfxml_file = self.conf['dfxml_file']
         self.commit = self.conf['commit']
+        self.configure_report_logger()
 
     def need_md5(self):
         for (rule, action) in self.conf['rules']:
