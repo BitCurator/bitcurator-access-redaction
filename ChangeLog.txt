@@ -6,6 +6,16 @@ BitCurator Access documentation is licensed under Creative Commons (CC 4.0 BY)
 
 Releases:
 
+0.1.8 (9/5/2016)
+* Seventh alpha release
+ - Removed refs to virtualenv
+ - Added JSON parse test for report
+ - Fixed offset issues with scrub, now using lightgrep for match
+
+0.1.7 (8/21/2016)
+* Sixth alpha release
+ - Various redact-cli fixes
+
 0.1.6 (8/16/2016)
 * Fifth alpha release
  - Now include lightgrep.py by default (original code is GPLv3)
