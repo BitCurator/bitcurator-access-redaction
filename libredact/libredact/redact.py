@@ -32,7 +32,7 @@ class Redactor:
                Use(lambda f: open(f, 'w'), error='Cannot write to the output file')),
             Optional('dfxml_file'):
             Or(None,
-               Use(lambda f: open(f, 'r'), error='Cannot read DFXML file')),
+               Use(lambda f: open(f, 'rb'), error='Cannot read DFXML file')),
             Optional('report_file'):
             Or(None,
                lambda f: open(f, 'w'), error='Cannot write to the report file'),
