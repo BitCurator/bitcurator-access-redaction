@@ -20,6 +20,7 @@ class Redactor:
     report = None
     commit = False
     kwargs = {}
+    redacted_count = 0
 
     def __init__(self, input_file=None, output_file=None, dfxml_file=None, report_file=None,
                  commit=False, ignore_patterns=[], rules=[]):
@@ -119,6 +120,7 @@ class Redactor:
                     else:
                         self.report_logger.info(',')
                 action.redact(rule, fileinfo, self.output_file, self.commit)
+                self.redacted_count = self.redacted_count + 1
                 if rule.complete:
                     return  # only need to redact once!
 
@@ -131,9 +133,9 @@ class Redactor:
 
     def execute(self):
         if self.conf.get('commit'):
-            logging.warning("Commit is ON. Will perform redactions..")
+            logging.info("Commit is ON. Will perform redactions..")
         else:
-            logging.warning("Commit is OFF. Performing dry-run only..")
+            logging.info("Commit is OFF. Performing dry-run only..")
         if self.report_logger is not None:
             self.report_logger.info('{')
             self.report_logger.info('"configuration": ')
@@ -158,6 +160,10 @@ class Redactor:
             callback=self.process_file)
         self.close_files()
 
+        if self.redacted_count == 1:
+            logging.info("Finished. 1 file was redacted.")
+        else:
+            logging.info("Finished. %d files were redacted." % self.redacted_count)
         elapsed = time.time() - t0
         logging.debug("Time to run: %d seconds" % elapsed)
         if self.report_logger is not None:

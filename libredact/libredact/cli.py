@@ -86,7 +86,6 @@ def main():
     from docopt import docopt
     from libredact import __version__
     args = docopt(__doc__, version=__version__)
-
     if args.get('--chelp'):
         print(config_help)
         exit()
