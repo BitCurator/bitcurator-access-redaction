@@ -92,7 +92,7 @@ def main():
         exit()
 
     # Set up console log levels (default=warn, quiet=error, debug=debug)
-    log_level = logging.WARN
+    log_level = logging.INFO
     if args.get('--quiet'):
         log_level = logging.ERROR
     if args.get('--detail'):  # debug overrides quiet

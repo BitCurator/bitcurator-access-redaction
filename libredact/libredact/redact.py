@@ -91,11 +91,17 @@ class Redactor:
         return opts
 
     def should_ignore(self, fi):
-        return self.conf['ignore_patterns'].search(fi.filename())
+        if len(self.conf['ignore_patterns'].pattern) == 0:
+            return False
+        else:
+            return self.conf['ignore_patterns'].search(fi.filename())
 
     def process_file(self, fileinfo):
         # logging.debug("Processing file: %s" % fileinfo.filename())
-        if fileinfo.is_dir() or fileinfo.filename().startswith('$') or self.should_ignore(fileinfo):
+        if fileinfo.is_dir() or fileinfo.filename().startswith('$'):
+            logging.debug("Ignoring folder or system file: %s" % fileinfo.filename())
+            return
+        if self.should_ignore(fileinfo):
             logging.info("Ignoring %s" % fileinfo.filename())
             return
 
