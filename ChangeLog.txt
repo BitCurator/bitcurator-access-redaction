@@ -6,6 +6,20 @@ BitCurator Access documentation is licensed under Creative Commons (CC 4.0 BY)
 
 Releases:
 
+0.2.4 (9/12/2016)
+* Tenth alpha release
+ - Fixed a zero-length regex processing bug
+ - Tidied up command-line output
+
+0.2.2 (9/8/2016)
+* Ninth alpha release
+ - Minor file access issues fixed
+
+0.2.0 (9/6/2016)
+* Eigth alpha release
+ - Minor file access issues fixed
+ - Updated test disk image
+
 0.1.8 (9/5/2016)
 * Seventh alpha release
  - Removed refs to virtualenv
