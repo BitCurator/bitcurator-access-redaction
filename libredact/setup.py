@@ -36,6 +36,7 @@ setup(name='libredact',
         'console_scripts': [
           'redact-cli = libredact.cli:main',
           'redact-gui = GUI.RedactGUI:main',
+          'redact-bulk = bulk_redact.cli:main',
         ],
       },
 
