@@ -27,7 +27,7 @@ setup(name='libredact',
       install_requires=[
         "schema", "docopt"  # , "PyQt5"
       ],
-      packages=['libredact', 'GUI'],
+      packages=['libredact', 'GUI', 'bulk_redact'],
       # package_data={'bctools': ['font/*.ttf', 'font/*.txt']},
 
       py_modules=['dfxml', 'fiwalk', 'lightgrep'],
