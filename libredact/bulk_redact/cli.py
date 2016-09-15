@@ -24,7 +24,7 @@ Options:
 #  -p, --progress=FILE    writes progress to the stdout or a file, if specified
 
 
-from .redact import Redactor
+from libredact.redact import Redactor
 import logging
 
 
