@@ -20,7 +20,8 @@ def parse(mypath, fillbyte):
         raise Exception("The path %s is reachable." % mypath)
 
     if path.isdir(mypath):
-        feature_files = listdir(mypath).map(lambda p: path.join(mypath, p))
+        feature_files = [path.join(mypath, p) for p in listdir(mypath)
+                         if path.isfile(path.join(mypath, p)) and p.endswith('.txt')]
         mypath = path.join(mypath, listdir(mypath)[0])
     else:
         feature_files = [mypath]
@@ -63,14 +64,15 @@ class rule_feature_file_match(redact_rule):
         self.complete = False
         self.create_db()
         self.handle = open(file)
+        # i = [l.split('\t')[0, 1] for l in self.handle if not l.startswith('#')]
         with closing(self.db.cursor()) as cursor:
             def myiter(itr):
                 for x in itr:
-                    if x.startswith('#'):
+                    if x.startswith('#') or len(x.strip()) == 0:
                         continue
                     else:
                         atoms = x.split('\t')
-                        yield (atoms[0], atoms[1])
+                        yield (atoms[0], atoms[1], len(atoms[1]))
             cursor.executemany("INSERT INTO feature (_offset, literal, length) values (?, ?, ?);",
                                myiter(self.handle))
         self.handle.close()
