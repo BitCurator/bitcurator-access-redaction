@@ -31,15 +31,15 @@ def parse(mypath, fillbyte):
         for line in handle:
             if not line.startswith('#'):
                 break
-            line = line[2, -1]  # strip off comment marker
+            line = line[2:-1]  # strip off comment marker
 
             if line.startswith('Filename:'):
-                input_file = line[10, -1].strip()
+                input_file = line[10:-1].strip()
                 conf['input_file'] = input_file
                 logging.debug('Found image file path: %s' % input_file)
 
             elif line.startswith('Feature-File-Version:'):
-                feature_file_ver = line[21, -1].strip()
+                feature_file_ver = line[21:-1].strip()
                 if feature_file_ver not in supported_feature_file_versions:
                     logging.warn('Feature file version %s is not recognized. '
                                  'This can have unpredictable results. '
