@@ -9,6 +9,21 @@ from dfxml import byte_run
 
 
 supported_feature_file_versions = ['1.1']
+included_reports = [
+    "email.txt",
+    "telephone.txt",
+    "ip.txt",
+    "domain.txt",
+    "ccn.txt",
+    "elf.txt",
+    "aes_keys.txt",
+    "gps.txt",
+    "hex.txt",
+    "httplogs.txt",
+    "pii.txt",
+    "url.txt",
+    "vcard.txt"
+]
 
 
 def parse(mypath, fillbyte):
@@ -21,7 +36,7 @@ def parse(mypath, fillbyte):
 
     if path.isdir(mypath):
         feature_files = [path.join(mypath, p) for p in listdir(mypath)
-                         if path.isfile(path.join(mypath, p)) and p.endswith('.txt')]
+                         if path.isfile(path.join(mypath, p)) and p in included_reports]
         mypath = path.join(mypath, listdir(mypath)[0])
     else:
         feature_files = [mypath]
@@ -50,7 +65,8 @@ def parse(mypath, fillbyte):
     rules = []
     for feature_file in feature_files:
         target = rule_feature_file_match(feature_file)
-        rules.append((target, action_fill(fillbyte)))
+        if target is not None:
+            rules.append((target, action_fill(fillbyte)))
     conf['rules'] = rules
     conf['commit'] = True
     return conf
