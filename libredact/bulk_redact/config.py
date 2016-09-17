@@ -52,6 +52,7 @@ def parse(mypath, fillbyte):
         target = rule_feature_file_match(feature_file)
         rules.append((target, action_fill(fillbyte)))
     conf['rules'] = rules
+    conf['commit'] = True
     return conf
 
 
