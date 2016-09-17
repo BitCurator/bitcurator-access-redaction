@@ -1,10 +1,10 @@
 """Usage:
   redact-bulk [-nqd] PATH
-  redact-bulk [-nqd] [--output=FILE] [--fill-with=BYTE] PATH
+  redact-bulk [-nqd] [--dry-run] [--output=FILE] [--fill-with=BYTE] PATH
   redact-bulk -h | --help
   redact-bulk -v | --version
 
-This program redacts features from a disk image, based on annotated that Bulk Extractor reports
+This program redacts features from a disk image, based on annotated Bulk Extractor reports
 produced by BitCurator. Can redact based on a single feature file, or a whole directory of feature
 files, making one pass over the data. By default it redacts features with SCRUB, filling sequences
 with a byte value of zero.
