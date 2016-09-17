@@ -111,6 +111,6 @@ class rule_feature_file_match(redact_rule):
         for (offset, length) in self.file_features:
             ret.append(
                 byte_run(img_offset=int(offset),
-                         len=len,
+                         len=int(length),
                          file_offset="n/a"))
         return ret
