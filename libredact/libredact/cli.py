@@ -43,13 +43,13 @@ Simple Commands:
   DFXML_FILE <file path>     optional path to previously generated DFXML
   REPORT_FILE <file path>    optional path to write audit report file
   IGNORE <pattern>           ignore files whose names match regex (repeatable)
-  COMMIT            perform rule actions
-                    (w/o COMMIT we have a dry run and report will indicate planned actions)
+  COMMIT                     perform all redactions
+    (no COMMIT line is equivalent to --dry-run option, will report but not perform the redactions)
 
 Rule Command Format:
   [target condition] [action]
 
-Each rule consists of an "condition" and an "action".
+Each rule consists of a "condition" and an "action".
 
 Target Conditions:
   FILE_NAME_EQUAL <filename> - target a file with the given filename
