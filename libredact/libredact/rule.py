@@ -171,12 +171,25 @@ class rule_seq_match(redact_rule):
         return get_runs_for_file_sequences(fi, red_seqs)
 
 
-class rule_file_seq_equal(rule_seq_match):
+class rule_file_seq_equal(redact_rule):
 
-    """Redacts any file containing a sequence the equals the given string"""
+    """Redacts any file containing a sequence that equals the given string"""
 
     def __init__(self, line, text):
-        rule_seq_match.__init__(self, line, re.escape(text))
+        redact_rule.__init__(self, line)
+        logging.debug("Creating lightgrep-based rule for fixed string: "+text)
+        self.lg = Lightgrep()
+        self.accum = HitAccumulator()
+        self.complete = False
+        # Note reliance on fixedString keyopt below
+        pats = [(text, ['US-ASCII', 'UTF-8', 'UTF-16LE', 'ISO-8859-1'],
+                KeyOpts(fixedString=True, caseInsensitive=False))]
+        prog, pmap = Lightgrep.createProgram(pats)
+        self.lg.createContext(prog, pmap, self.accum.lgCallback)
+
+    def should_redact(self, fileobject):
+        hitcount = self.lg.searchBuffer(fileobject.contents(), self.accum)
+        return hitcount > 0
 
     def runs_to_redact(self, fi):
         """Returns the byte_runs of the source which match the rule.
@@ -184,12 +197,27 @@ class rule_file_seq_equal(rule_seq_match):
         return fi.byte_runs()
 
 
-class rule_seq_equal(rule_seq_match):
+class rule_seq_equal(rule_file_seq_equal):
 
     """Redacts a given sequence (string) anywhere it appears in the image"""
 
     def __init__(self, line, text):
-        rule_seq_match.__init__(self, line, re.escape(text))
+        rule_file_seq_equal.__init__(self, line, text)
+
+    def runs_to_redact(self, fi):
+        """Overridden to return the byte runs of just the given text"""
+        red_seqs = []
+        for h in self.accum.Hits:
+            new = True
+            for seq in red_seqs:
+                if seq[0] == h['start'] and seq[1] == h['end']:
+                    new = False
+                    break
+            if new:
+                red_seqs.append((h['start'], h['end']))
+        self.lg.reset()
+        self.accum.reset()
+        return get_runs_for_file_sequences(fi, red_seqs)
 
 
 def get_runs_for_file_sequences(fi, file_sequences):
