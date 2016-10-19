@@ -11,7 +11,7 @@ This repository currently includes the following libraries:
 
 Note! If you're using the BitCurator environment version 1.7.28 or newer, these dependencies and environmental modifications are already installed. You can skip ahead to "Building and installing libredact".
 
-  * Install PIP:
+  * Install pip:
 ```shell
 $ sudo apt-get install python-pip
 ```
@@ -42,11 +42,11 @@ $ cd bca-redtools
 ```shell
 $ cd libredact
 ```
-* Build and install with PIP:
+* Build and install with pip. Note! In the BitCurator Environment, both Python 2.7 and Python 3.5 are installed, and the "pip" command links to Python 3.5 version of pip. You must use "pip2" to install with Python 2.7 (currently required due to a dependency on pylightgrep).
 ```shell
-$ pip install -e .
+$ pip2 install -e .
 ```
-* PIP will create a executable script here: /home/youruser/.local/bin/redact-cli
+* Pip will create a executable script here: /home/youruser/.local/bin/redact-cli
 
 * If redact-cli is not on your PATH, you can add it temporarily:
 ```shell
