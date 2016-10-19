@@ -83,4 +83,6 @@ Project documentation and other non-software products of the BitCurator Access t
 
 Unless otherwise indicated, software objects in this repository are distributed under the terms of the GNU General Public License, Version 3. See the text file "LICENSE" for further details about the terms of this license.
 
-The lightgrep.py Python interface to liblightgrep is included under the terms of the license for liblightgrep, namely the GNU General Public License, Version 3. (See https://github.com/strozfriedberg/liblightgrep/blob/master/COPYING for original license terms).
+The lightgrep.py Python interface to liblightgrep is included under the terms of the license for liblightgrep, namely the GNU General Public License, Version 3. 
+
+(See https://github.com/strozfriedberg/liblightgrep/blob/master/COPYING for original liblightgrep license terms).
