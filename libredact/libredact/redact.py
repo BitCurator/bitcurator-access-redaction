@@ -100,8 +100,10 @@ class Redactor:
 
     def process_file(self, fileinfo):
         if self.progress_callback is not None:
-            mycallback = self.progress_callback
-            mycallback(fileinfo.byte_runs[0].img_offset, self.image_size)
+            runs = fileinfo.byte_runs()
+            if len(runs) > 0:
+                mycallback = self.progress_callback
+                mycallback.updateProgressBar(runs[0].img_offset, self.image_size)
         # logging.debug("Processing file: %s" % fileinfo.filename())
         if fileinfo.is_dir() or fileinfo.filename().startswith('$'):
             logging.debug("Ignoring folder or system file: %s" % fileinfo.filename())

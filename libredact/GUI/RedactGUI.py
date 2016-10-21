@@ -51,9 +51,13 @@ class RedactGUI(QtWidgets.QMainWindow, Ui_RedactWindow):
 
         # Handle button presses in config edit tab - this may be better done elsewhere
 
-    def updateProgressBar(self, offset, total):
-        fraction = offset/total
-        self.RedactionProgress.setProperty("value", fraction)
+    class CallbackHandler(object):
+        def __init__(self, progress_widget):
+            self.progress_widget = progress_widget
+
+        def updateProgressBar(self, offset, total):
+            fraction = offset/total
+            self.progress_widget.setProperty("value", fraction)
 
     def buttonClickedClose(self):
         # Quit the app, duh
@@ -81,7 +85,8 @@ class RedactGUI(QtWidgets.QMainWindow, Ui_RedactWindow):
         logging.debug('Combined config & arguments:\n%s' % cfg)
         # validate the config against schema and show any errors
         redactor = redact.Redactor(**cfg)
-        redactor.setProgressCallback(self.updateProgressBar)
+        cbh = self.CallbackHandler(self.RedactionProgress)
+        redactor.setProgressCallback(cbh)
         redactor.execute()
 
         # Run as shell process
@@ -141,7 +146,7 @@ def main():
 
     # Connect redactor logging to text box
     log_handler = QTextEditLogger(form.textEdit)
-    logging.getLogger("libredact").addHandler(log_handler)
+    logging.getLogger().addHandler(log_handler)
     form.show()
 
     sys.exit(app.exec_())
