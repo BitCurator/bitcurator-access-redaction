@@ -11,8 +11,7 @@
 import os
 import sys
 import logging
-import libredact
-from libredact import config
+from libredact import redact, config
 
 from PyQt5 import QtCore, QtWidgets
 from RedactWindow import Ui_RedactWindow
@@ -81,7 +80,7 @@ class RedactGUI(QtWidgets.QMainWindow, Ui_RedactWindow):
         cfg = config.parse(self.fname)
         logging.debug('Combined config & arguments:\n%s' % cfg)
         # validate the config against schema and show any errors
-        redactor = libredact.redact.Redactor(**cfg)
+        redactor = redact.Redactor(**cfg)
         redactor.setProgressCallback(self.updateProgressBar)
         redactor.execute()
 
