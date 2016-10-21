@@ -10,15 +10,11 @@
 
 import os
 import sys
-import time
-import libredact
-import threading
 import logging
-from libredact.redact import Redactor
+import libredact
 from libredact import config
-from subprocess import Popen, PIPE
 
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtCore, QtWidgets
 from RedactWindow import Ui_RedactWindow
 
 
@@ -26,6 +22,7 @@ class RedactGUI(QtWidgets.QMainWindow, Ui_RedactWindow):
     def __init__(self):
         super(RedactGUI, self).__init__()
         self.setupUi(self)
+        self.fname = None
 
         # ALL CONTROL CODE GOES HERE, IN SUBSEQUENT FUNCTIONS, IN ADDITIONAL MODULES, OR MAIN!
         # *DO NOT* EDIT RedactWindow,py! (USE ONLY QTCREATOR TO UPDATE IT)
@@ -47,13 +44,13 @@ class RedactGUI(QtWidgets.QMainWindow, Ui_RedactWindow):
         # Custom signal connection to update redaction progress bar
         # RedactWindow.connect(self.thread, SIGNAL("progress(int, int)"), self.updateProgressBar)
         # Handle buttons in main tab - this may be better done elsewhere
-        self.CloseButton.clicked.connect(self.buttonClickedClose)
         self.CancelButton.clicked.connect(self.buttonClickedCancel)
-        self.CancelButton.clicked.connect(self.buttonClickedRun)
+        self.RunButton.clicked.connect(self.buttonClickedRun)
+
+        self.SelectConfigTool.clicked.connect(self.buttonClickedSelectConfig)
+        self.OpenConfigEditorButton.clicked.connect(self.buttonClickedOpenConfigEditorButton)
 
         # Handle button presses in config edit tab - this may be better done elsewhere
-        self.LoadButton.clicked.connect(self.buttonClickedLoad)
-        self.SaveButton.clicked.connect(self.buttonClickedSave)
 
     def updateProgressBar(self, offset, total):
         fraction = offset/total
@@ -68,20 +65,72 @@ class RedactGUI(QtWidgets.QMainWindow, Ui_RedactWindow):
         QtCore.QCoreApplication.instance().quit()
 
     def buttonClickedRun(self):
-        # Placeholder - fix for actual app
-        self.worker.redact(self.redactor)
-
-    def buttonClickedLoad(self):
+        # Run through API
         # Read the redaction configuration file
-        config_path = self.SelectConfigEdit.text()
-        cfg = config.parse(config_path)
+        if self.fname is None:
+            msg = QtWidgets.QMessageBox()
+            msg.setIcon(QtWidgets.QMessageBox.Critical)
+            msg.setText("Invalid Configuration")
+            msg.setInformativeText("You must select a configuration file.")
+            msg.setWindowTitle("Error")
+            # msg.setDetailedText("The details are as follows:")
+            msg.setStandardButtons(QtWidgets.QMessageBox.Ok)
+            msg.exec_()
+            return
+
+        cfg = config.parse(self.fname)
         logging.debug('Combined config & arguments:\n%s' % cfg)
         # validate the config against schema and show any errors
-        self.redactor = Redactor(**cfg)
+        redactor = libredact.redact.Redactor(**cfg)
+        redactor.setProgressCallback(self.updateProgressBar)
+        redactor.execute()
 
-    def buttonClickedSave(self):
-        # Placeholder - fix for actual app
-        QtCore.QCoreApplication.instance().quit()
+        # Run as shell process
+        # self.process = QtWidgets.QProcess()
+        # self.connect(self.process, QtCore.SIGNAL("readyReadStdout()"), self.readOutput)
+        # self.connect(self.process, QtCore.SIGNAL("readyReadStderr()"), self.readErrors)
+        # command = "redact-cli --config=%s" % self.fname
+        # self.process.setArguments(QtWidgets.QStringList.split(" ", command))
+        # self.process.start()
+
+    def readOutput(self):
+        self.textEdit.append(QtCore.QString(self.process.readStdout()))
+        if self.process.isRunning() is False:
+            self.textEdit.append("\n Redaction completed, see above for any errors.")
+
+    def readErrors(self):
+        self.textEdit.append("error: " + QtCore.QString(self.process.readLineStderr()))
+
+    def buttonClickedSelectConfig(self):
+        self.fname = QtWidgets.QFileDialog.getOpenFileName(
+            self, 'Open file',
+            '', "configuration text files (*.*)")[0]
+        self.SelectConfigEdit.setText(self.fname)
+
+    def buttonClickedOpenConfigEditorButton(self):
+        os.system("gnome-text-editor %s" % self.fname)
+        msg = QtWidgets.QMessageBox()
+        msg.setIcon(QtWidgets.QMessageBox.Warning)
+        msg.setText("Save Editor Changes")
+        msg.setInformativeText("You opened the configuration file in an editor."
+                               "\nYou must save any changes before they will take effect.")
+        msg.setWindowTitle("Reminder")
+        # msg.setDetailedText("The details are as follows:")
+        msg.setStandardButtons(QtWidgets.QMessageBox.Ok)
+        msg.exec_()
+
+
+class QTextEditLogger(logging.Handler):
+    def __init__(self, textEdit):
+        super(QTextEditLogger, self).__init__()
+        self.widget = textEdit
+
+    def emit(self, record):
+        msg = self.format(record)
+        self.widget.textCursor().appendPlainText(msg)
+
+    def write(self, m):
+        pass
 
 
 def main():
@@ -90,6 +139,10 @@ def main():
 
     # UI setup is performed in the RedactGUI class
     form = RedactGUI()
+
+    # Connect redactor logging to text box
+    log_handler = QTextEditLogger(form.textEdit)
+    logging.getLogger("libredact").addHandler(log_handler)
     form.show()
 
     sys.exit(app.exec_())

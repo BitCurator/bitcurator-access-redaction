@@ -21,6 +21,7 @@ class Redactor:
     commit = False
     kwargs = {}
     redacted_count = 0
+    progress_callback = None
 
     def __init__(self, input_file=None, output_file=None, dfxml_file=None, report_file=None,
                  commit=False, ignore_patterns=[], rules=[]):
@@ -98,6 +99,8 @@ class Redactor:
             return self.conf['ignore_patterns'].search(fi.filename())
 
     def process_file(self, fileinfo):
+        if self.progress_callback is not None:
+            self.progress_callback(fileinfo.byte_runs[0].img_offset, self.image_size)
         # logging.debug("Processing file: %s" % fileinfo.filename())
         if fileinfo.is_dir() or fileinfo.filename().startswith('$'):
             logging.debug("Ignoring folder or system file: %s" % fileinfo.filename())
@@ -191,3 +194,7 @@ class Redactor:
             logger.removeHandler(h)
         logger.addHandler(fh)
         self.report_logger = logger
+
+    def setProgressCallback(self, progress_callback=None):
+        """Set a callback method to report progress as offset in image bytes (int, int)."""
+        self.progress_callback = progress_callback
