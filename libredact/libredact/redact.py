@@ -21,6 +21,7 @@ class Redactor:
     commit = False
     kwargs = {}
     redacted_count = 0
+    bytes_processed = 0
     progress_callback = None
 
     def __init__(self, input_file=None, output_file=None, dfxml_file=None, report_file=None,
@@ -100,11 +101,9 @@ class Redactor:
 
     def process_file(self, fileinfo):
         if self.progress_callback is not None:
-            runs = fileinfo.byte_runs()
-            if len(runs) > 0:
-                mycallback = self.progress_callback
-                mycallback.updateProgressBar(runs[0].img_offset, self.image_size)
-        # logging.debug("Processing file: %s" % fileinfo.filename())
+            percent = int(100 * self.bytes_processed / self.image_size)
+            self.progress_callback.updateProgressBar(percent)
+            self.bytes_processed = self.bytes_processed + fileinfo.filesize()
         if fileinfo.is_dir() or fileinfo.filename().startswith('$'):
             logging.debug("Ignoring folder or system file: %s" % fileinfo.filename())
             return

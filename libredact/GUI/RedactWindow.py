@@ -65,7 +65,7 @@ class Ui_RedactWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.RedactionProgress.sizePolicy().hasHeightForWidth())
         self.RedactionProgress.setSizePolicy(sizePolicy)
-        self.RedactionProgress.setMaximum(1)
+        self.RedactionProgress.setMaximum(100)
         self.RedactionProgress.setProperty("value", 0)
         self.RedactionProgress.setTextVisible(True)
         self.RedactionProgress.setObjectName("RedactionProgress")

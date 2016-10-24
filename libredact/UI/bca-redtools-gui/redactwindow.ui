@@ -105,7 +105,7 @@
        </sizepolicy>
       </property>
       <property name="maximum">
-       <number>1</number>
+       <number>100</number>
       </property>
       <property name="value">
        <number>0</number>
