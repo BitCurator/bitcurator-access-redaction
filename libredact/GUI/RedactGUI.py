@@ -64,8 +64,7 @@ class RedactGUI(QtWidgets.QMainWindow, Ui_RedactWindow):
 
         output_file = self.redact_config['output_file']
         if os.path.exists(output_file):
-            msg = "The output image file already exists."
-            " Do you want to overwrite this file: %s" % output_file
+            msg = "Output image file exists. Want to overwrite this file?\n%s" % output_file
             reply = QtWidgets.QMessageBox.question(
                 self, 'Confirm', msg, QtWidgets.QMessageBox.Yes, QtWidgets.QMessageBox.No)
             if reply != QtWidgets.QMessageBox.Yes:
