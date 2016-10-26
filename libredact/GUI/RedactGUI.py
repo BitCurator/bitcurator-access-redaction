@@ -62,6 +62,15 @@ class RedactGUI(QtWidgets.QMainWindow, Ui_RedactWindow):
             msg.exec_()
             return
 
+        output_file = self.redact_config['output_file']
+        if os.path.exists(output_file):
+            msg = "The output image file already exists."
+            " Do you want to overwrite this file: %s" % output_file
+            reply = QtWidgets.QMessageBox.question(
+                self, 'Confirm', msg, QtWidgets.QMessageBox.Yes, QtWidgets.QMessageBox.No)
+            if reply != QtWidgets.QMessageBox.Yes:
+                return
+
         self.redact_thread = RedactorThread(self.redact_config, self.callback_handler)
 
         # Connect any signals..
@@ -91,15 +100,17 @@ class RedactGUI(QtWidgets.QMainWindow, Ui_RedactWindow):
         # if args.get('--dry-run'):  # if True then override COMMIT
         #     cfg['commit'] = False
         # cfg['detail'] = args.get('--detail')
-        self.fname = QtWidgets.QFileDialog.getOpenFileName(
+        filenames = QtWidgets.QFileDialog.getOpenFileName(
             self, 'Open file',
-            '', "configuration text files (*.*)")[0]
-        self.SelectConfigEdit.setText(self.fname)
-        try:
-            self.redact_config = config.parse(self.fname)
-            logging.debug('Combined config & arguments:\n%s' % self.redact_config)
-        except Exception as e:
-            logging.error(e)
+            '', "Configuration text files (*.*)")
+        if filenames[0]:
+            self.fname = filenames[0]
+            self.SelectConfigEdit.setText(self.fname)
+            try:
+                self.redact_config = config.parse(self.fname)
+                logging.debug('Combined config & arguments:\n%s' % self.redact_config)
+            except Exception as e:
+                logging.error(e)
 
     def buttonClickedOpenConfigEditorButton(self):
         os.system("gnome-text-editor %s" % self.fname)
