@@ -53,7 +53,7 @@ $ pip2 install -e .
 $ PATH=$PATH:/home/`whoami`/.local/bin
 ```
 
-# Running
+# Running (command line interface)
 
 The redaction tool can be run from the command line as follows:
 ```shell
@@ -62,6 +62,16 @@ The redaction tool can be run from the command line as follows:
 Instructions for creating a configuration file are also available on the command line:
 ```shell
     $ redact-cli -H
+```
+# Running (command line interface, redacting using annotated bulk_extractor reports)
+
+# Running (graphical interface)
+
+The redation tool includes a GUI that can be used to create and edit configuration files, and execute redaction actions. When using the GUI, all options (including input and output files) must be specified within the configuration file.
+
+The GUI can be started by running the following command in a terminal:
+```shell
+    $ redact-gui
 ```
 
 # Using the Python module
