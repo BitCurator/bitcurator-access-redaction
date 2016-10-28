@@ -91,9 +91,14 @@ Redactor API to process a disk image. (Coming soon...)
 
 # Dependencies
 
-  * The lightgrep.py Python API file is included with this repository. Should you need to update it to match future iterations of liblightgrep, the file can be downloaded and placed into the bca-redtools/libredact folder (alongside fiwalk.py and dfxml.py) using these commands:
+  * The lightgrep.py Python API file is included with this repository (in the libredact folder). It should not be modified. If you need to update it or submit patches, the original source can be found at:
 ```shell
-$ cd bca-redtools/libredact; wget https://raw.githubusercontent.com/strozfriedberg/liblightgrep/master/pylightgrep/lightgrep.py
+$ https://raw.githubusercontent.com/strozfriedberg/liblightgrep/master/pylightgrep/lightgrep.py
+```
+
+  * The dfxml.py and fiwalk.py files are included with this repository (in the libredact folder). They should not be modified. If you need to update them or submit patches, the original sources can be found in the following master repository:
+```shell
+$ https://github.com/simsong/dfxml/tree/master/python
 ```
 
 # Licenses
