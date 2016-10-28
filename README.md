@@ -65,9 +65,18 @@ Instructions for creating a configuration file are also available on the command
 ```
 # Running (command line interface, redacting using annotated bulk_extractor reports)
 
+If you have previously generated bulk_extractor feature reports (and annotated them with identify_filenames.py), the final annotated text reports can be used as redaction lists (redacting each entry in the report).  The bulk_extractor report-ready redaction tool can be run from the command line as follows:
+```shell
+    $ redact-bulk -h
+```
+Instructions for creating a configuration file are also available on the command line:
+```shell
+    $ redact-bulk -H
+```
+
 # Running (graphical interface)
 
-The redation tool includes a GUI that can be used to create and edit configuration files, and execute redaction actions. When using the GUI, all options (including input and output files) must be specified within the configuration file.
+The redation tool includes a GUI that can be used to create and edit configuration files, and execute redaction actions equivalent to those performed using redact-cli. When using the GUI, all options (including input and output files) must be specified within the configuration file.
 
 The GUI can be started by running the following command in a terminal:
 ```shell
