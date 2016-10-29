@@ -1,11 +1,15 @@
-bca-redtools: BitCurator Access Redaction Tools
------------------------------------------------
+BitCurator Access Redaction Tools (bca-redtools)
+------------------------------------------------
 
-Disk image redaction tools developed for the BitCurator Access project.
+This repository includes a set of data redaction tools developed for the BitCurator Access project. These tools are primarily intended to support scrubbing/overwriting patterns identified in raw disk image files, but may be applied to any source presented as a file. Redacting patterns from raw disk images (or files) may render the disk image (or file) unmountable or unrenderable. Use at your own risk!
 
 This repository currently includes the following libraries:
 
 * libredact: A Python redaction library and standalone raw disk image redaction tool. Loosely based on the iredact.py tool.
+
+* redact-cli: A command-line interface to the redaction library
+* redact-bulk: A command-line interface to the redaction library that redacts items identified in annotated bulk_extractor reports
+* redact-gui: A GUI interface that mirrors the functionality of redact-cli
 
 # Prerequisites
 
