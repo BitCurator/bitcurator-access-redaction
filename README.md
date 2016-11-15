@@ -105,6 +105,10 @@ $ https://raw.githubusercontent.com/strozfriedberg/liblightgrep/master/pylightgr
 $ https://github.com/simsong/dfxml/tree/master/python
 ```
 
+# Acknowledgements
+
+Greg Jansen developed the BitCurator Access Redaction Tools under contract for the BitCurator Access project.
+
 # Licenses
 
 Project documentation and other non-software products of the BitCurator Access team and contracted partners are subject to the the Creative Commons Attribution 4.0 Unported license (CC BY 4.0).
