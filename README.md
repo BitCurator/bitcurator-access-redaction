@@ -5,11 +5,11 @@ This repository includes a set of data redaction tools developed for the BitCura
 
 This repository currently includes the following libraries:
 
-* libredact: A Python redaction library and standalone raw disk image redaction tool. Loosely based on the iredact.py tool.
+* **libredact**: A Python redaction library and standalone raw disk image redaction tool. Loosely based on the iredact.py tool.
 
-* redact-cli: A command-line interface to the redaction library
-* redact-bulk: A command-line interface to the redaction library that redacts items identified in annotated bulk_extractor reports
-* redact-gui: A GUI interface that mirrors the functionality of redact-cli
+* **redact-cli**: A command-line interface to the redaction library
+* **redact-bulk**: A command-line interface to the redaction library that redacts items identified in annotated bulk_extractor reports
+* **redact-gui**: A GUI interface that mirrors the functionality of redact-cli
 
 # Prerequisites
 
