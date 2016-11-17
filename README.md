@@ -1,5 +1,4 @@
-BitCurator Access Redaction Tools (bca-redtools)
-------------------------------------------------
+# BitCurator Access Redaction Tools (bca-redtools)
 
 This repository includes a set of data redaction tools developed for the BitCurator Access project. These tools are primarily intended to support scrubbing/overwriting patterns identified in raw disk image files, but may be applied to any source presented as a file. Redacting patterns from raw disk images (or files) may render the disk image (or file) unmountable or unrenderable. Use at your own risk!
 
@@ -11,7 +10,7 @@ This repository currently includes the following libraries:
 * **redact-bulk**: A command-line interface to the redaction library that redacts items identified in annotated bulk_extractor reports
 * **redact-gui**: A GUI interface that mirrors the functionality of redact-cli
 
-# Prerequisites
+## Prerequisites
 
 Note! If you're using the BitCurator environment version 1.7.28 or newer, these dependencies and environmental modifications are already installed. You can skip ahead to "Building and installing libredact".
 
@@ -33,7 +32,8 @@ $ ./configure --with-boost-libdir=/usr/lib/x86_64-linux-gnu
 $ export LD_LIBRARY_PATH=/usr/local/lib
 ```
 
-# Building and installing libredact
+## Building and installing libredact
+
 * Clone this repository:
 ```shell
 $ git clone https://github.com/bitcurator/bca-redtools
@@ -57,7 +57,7 @@ $ pip2 install -e .
 $ PATH=$PATH:/home/`whoami`/.local/bin
 ```
 
-# Running (command line interface)
+## Running (command line interface)
 
 The redaction tool can be run from the command line as follows:
 ```shell
@@ -67,7 +67,7 @@ Instructions for creating a configuration file are also available on the command
 ```shell
     $ redact-cli -H
 ```
-# Running (command line interface, redacting using annotated bulk_extractor reports)
+## Running (command line interface, redacting using annotated bulk_extractor reports)
 
 If you have previously generated bulk_extractor feature reports (and annotated them with identify_filenames.py), the final annotated text reports can be used as redaction lists (redacting each entry in the report).  The bulk_extractor report-ready redaction tool can be run from the command line as follows:
 ```shell
@@ -78,7 +78,7 @@ Instructions for creating a configuration file are also available on the command
     $ redact-bulk -H
 ```
 
-# Running (graphical interface)
+## Running (graphical interface)
 
 The redation tool includes a GUI that can be used to create and edit configuration files, and execute redaction actions equivalent to those performed using redact-cli. When using the GUI, all options (including input and output files) must be specified within the configuration file.
 
@@ -87,13 +87,13 @@ The GUI can be started by running the following command in a terminal:
     $ redact-gui
 ```
 
-# Using the Python module
+## Using the Python module
 
 All of the same functions as the command line are also available in the
 libredact module. Below is a short example Python script that uses the
 Redactor API to process a disk image. (Coming soon...)
 
-# Dependencies
+## Dependencies
 
   * The lightgrep.py Python API file is included with this repository (in the libredact folder). It should not be modified. If you need to update it or submit patches, the original source can be found at:
 ```shell
@@ -105,11 +105,11 @@ $ https://raw.githubusercontent.com/strozfriedberg/liblightgrep/master/pylightgr
 $ https://github.com/simsong/dfxml/tree/master/python
 ```
 
-# Acknowledgements
+## Acknowledgements
 
 Greg Jansen developed the BitCurator Access Redaction Tools under contract for the BitCurator Access project.
 
-# Licenses
+## Licenses
 
 Project documentation and other non-software products of the BitCurator Access team and contracted partners are subject to the the Creative Commons Attribution 4.0 Unported license (CC BY 4.0).
 
