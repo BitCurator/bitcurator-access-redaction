@@ -12,7 +12,7 @@ configurations that are inline, in the test/main.py program. You can run the tes
 
 1. Change to code directory:
 ```shell
-    $ cd bca-redtools/libredact
+    $ cd bitcurator-access-redaction/libredact
 ```
 
 1. Run the test class:
@@ -36,7 +36,7 @@ To modify the test image, you will need to mount it as a filesystem. Follow thes
 
 1. Mount the disk image as a loopback device:
 ```shell
-    $ sudo mount -o uid=1000,gid=1000,loop ~/git/bca-redtools/libredact/test/test_image.raw ~/Desktop/redact_test_image/
+    $ sudo mount -o uid=1000,gid=1000,loop ~/git/bitcurator-access-redaction/libredact/test/test_image.raw ~/Desktop/redact_test_image/
 ```
 
 1. Add files. If you run out of room on the disk, consider truncating one of the books. You can do this by opening a book file in a text editor, deleting the second half of the text. You will have to save the result outside of the disk image, then delete the original file in the image, then replace it with the new file you created.
