@@ -1,4 +1,4 @@
-# BitCurator Access Redaction Tools (bca-redtools)
+# BitCurator Access Redaction Tools (bitcurator-acceess-redaction)
 
 This repository includes a set of data redaction tools developed for the BitCurator Access project. These tools are primarily intended to support scrubbing/overwriting patterns identified in raw disk image files, but may be applied to any source presented as a file. Redacting patterns from raw disk images (or files) may render the disk image (or file) unmountable or unrenderable. Use at your own risk!
 
@@ -27,7 +27,7 @@ Note: Lightgrep builds from source and has further dependencies in turn, includi
 ```shell
 $ ./configure --with-boost-libdir=/usr/lib/x86_64-linux-gnu
 ```
-  * The lightgrep library install into /usr/local/lib, so this directory will need to be on the system's LD_LIBRARY_PATH in order for redact-cli to find it. Your bca-redtools environment must include the LD_LIBRARY_PATH setting:
+  * The lightgrep library install into /usr/local/lib, so this directory will need to be on the system's LD_LIBRARY_PATH in order for redact-cli to find it. Your __bitcurator-access-redaction__ environment must include the LD_LIBRARY_PATH setting:
 ```shell
 $ export LD_LIBRARY_PATH=/usr/local/lib
 ```
@@ -36,11 +36,11 @@ $ export LD_LIBRARY_PATH=/usr/local/lib
 
 * Clone this repository:
 ```shell
-$ git clone https://github.com/bitcurator/bca-redtools
+$ git clone https://github.com/bitcurator/bitcurator-access-redaction
 ```
 * Enter the repository directory:
 ```shell
-$ cd bca-redtools
+$ cd bitcurator-access-redaction
 ```
 * Navigate to the libredact directory:
 ```shell
