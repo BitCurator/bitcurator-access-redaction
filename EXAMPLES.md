@@ -46,9 +46,7 @@ $ fiwalk -f -X ~/test_image_fw.xml ~/test_image.raw
 
 The rule in this example targets a file associated with a specific MD5 hash for redaction. The action - SCRUB - indicates that every byte associated with the file will be overwritten with zeroes.
 
-
-Run the redaction
-
+###Run the redaction
 
 Create a text file called “scrub-config.txt” in /home/bcadmin. We will be scrubbing the “Metamorphosis.txt” file using its MD5. Save the following plain text content into your file:
 
@@ -71,8 +69,7 @@ $ INFO:root:Commit is ON. Will perform redactions..
 $ INFO:root:Finished. 1 file was redacted.
 ```
 
-Verify the redaction
-
+###Verify the redaction
 
 On the desktop, double-click on the home icon and locate the file scrub-output.raw. Right-click on scrub-output.raw, and select Scripts > Mount Disk Image. The mounted disk image should appear on the desktop. Double-click on this icon and navigate to the Metamorphosis.txt file. Right-click on Metamorphosis, then select Scripts > File Analysis > View in Hex Editor. Confirm that the contents of the file have been zeroed out. After examining the contents, right-click on the image file (not the mounted disk icon) and select “Scripts->Unmount Disk Image”.
 
@@ -82,8 +79,7 @@ On the desktop, double-click on the home icon and locate the file scrub-output.r
 
 The rule in this example overwrites any matching sequences with the byte 0x44 (the hex code for capital ‘D’ in ASCII). For the example, we’ll overwrite all instances of the email address “pat@m57.biz”, an email address that appears frequently in the test data.
  
-Run the redaction
-
+###Run the redaction
 
 Create a text file called “fill-config.txt” in /home/bcadmin. Save the following plain text content into your file:
 
@@ -112,8 +108,7 @@ $ INFO:root:Finished. 16 files were redacted.
 
 The rule in this example “fuzzes” a binary, altering the bytes (but not the length of the byte sequence) so that the binary can no longer be executed (in the case of .exe files) or accessed by other programs (in the case of .dll files).
 
-Run the redaction
-
+###Run the redaction
 
 Create a text file called “fuzz-config.txt” in /home/bcadmin. Save the following plain text content into your file:
 
@@ -138,7 +133,7 @@ $ INFO:root:Commit is ON. Will perform redactions..
 $ INFO:root:Finished. 1 file was redacted.
 ```
 
-Verify the redaction (Optional: The binary fuzz test requires access to a Windows machine)
+###Verify the redaction (Optional: The binary fuzz test requires access to a Windows machine)
 
 
 On the desktop, double-click on the home icon and locate the file fuzz-output.raw. Right-click on fuzz-output.raw, then select Scripts > Mount Disk Image. Within the mounted disk image, navigate to executables/PUTTY.EXE. Copy PUTTY.EXE to a directory on a Windows computer.  If you’re running the BitCurator environment as a Virtual Machine on top of Windows, you can do this by copying PUTTY.EXE to a shared folder.
@@ -150,7 +145,6 @@ On the Windows host, double-click on PUTTY.EXE to confirm that it does not execu
 ## Using the graphical interface
 
 The bca-redtools source code includes a GUI front-end to the functionality described in the previous section. 
-
 
 Start the GUI from the terminal by typing the following commands in a terminal:
 
@@ -174,10 +168,9 @@ COMMIT
 
 Do not click “Save” - this will simply save the file with the default name, “None”. Instead, move your cursor to the gedit menu bar, select “File -> Save As”, and save the file as “scrub_config2.txt” in the /home/bcadmin directory. Click “Save” in the file dialog, then close the gedit window. Click “OK” to dismiss the final reminder dialog.
 
-
 Now click “Select File..”, and in the file dialog select the “scrub-config2.txt” file you just created in /home/bcadmin. Click “Run”, and the application should apply the redaction, generating feedback on the process in the “Console Output” window:
 
-Verify the redaction
+###Verify the redaction
 
 On the desktop, double-click on the home icon and locate the file scrub-output2.raw. Right-click on scrub-output2.raw, and select Scripts > Mount Disk Image. The mounted disk image should appear on the desktop. Double-click on this icon and navigate to the Metamorphosis.txt file. Right-click on Metamorphosis, then select Scripts > File Analysis > View in Hex Editor. Confirm that the contents of the file have been zeroed out. After examining the contents, right-click on the image file (not the mounted disk icon) and select “Scripts->Unmount Disk Image”.
 
@@ -212,7 +205,7 @@ $ INFO:root:Commit is ON. Will perform redactions..
 $ INFO:root:Finished. 1 file was redacted.
 ```
 
-Verify the redaction
+###Verify the redaction
 
 On the desktop, double-click on the home icon and locate the file email-output.raw. Right-click on email-output.raw, and select Scripts > File Analysis > View in Hex Editor. Confirm that the email addresses at the associated offsets have been zeroed out.
 
