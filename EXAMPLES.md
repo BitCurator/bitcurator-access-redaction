@@ -2,7 +2,7 @@
 
 ## Downloading and Installing
 
-Download a bca-redtools source code release from GitHub. (For this example, we’ll
+Download a bitcurator-access-redaction release from GitHub. (For this example, we’ll
 use the v0.4.2 release. You should use the latest release, which you can find 
 at https://github.com/BitCurator/bitcurator-access-redaction/releases). You will 
 see options to download either the .tar.gz or .zip versions of the release. 
@@ -18,14 +18,14 @@ $ unzip v0.4.2
 In the same terminal, navigate to the libredact sub-folder, and then run the pip (Python 2.7 version) install command:
 
 ```shell
-$ cd bca-redtools-0.4.0/libredact
+$ cd bitcurator-access-redaction-0.4.2/libredact
 $ pip2 install -e .
 ```
 
-The bca-redtools source contains a small FAT32 test image with text files from Project Gutenburg, text dumps of email from the M57 forensic corpus, and several Windows executables. In the same terminal, copy this test image to your home directory (this is a convenience step to simplify the commands described here):
+The bitcurator-access-redaction source contains a small FAT32 test image with text files from Project Gutenburg, text dumps of email from the M57 forensic corpus, and several Windows executables. In the same terminal, copy this test image to your home directory (this is a convenience step to simplify the commands described here):
 
 ```shell
-$ cp ~/bca-redtools-0.4.0/libredact/test/test_image.raw ~/
+$ cp ~/bitcurator-access-redaction-0.4.2/libredact/test/test_image.raw ~/
 $ cd /home/bcadmin
 ```
 
