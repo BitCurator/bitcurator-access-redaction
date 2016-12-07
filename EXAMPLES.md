@@ -104,6 +104,12 @@ $ INFO:root:Commit is ON. Will perform redactions..
 $ INFO:root:Finished. 16 files were redacted.
 ```
 
+###Verify the redaction
+
+On the desktop, double-click on the home icon and locate the file fill-output.raw. Right-click on fill-output.raw, then select Scripts > Mount Disk Image. The mounted disk image should appear on the Desktop. Double-click on the disk image icon and navigate to email/Charlie_2009-11-16_1102_Received.txt [first file listed in the email directory]. Double-click on the file to open it in the gedit text editor.
+
+Confirm that the characters in pat@m57.biz have been replaced with ASCII character ‘D’.
+
 ## Fuzzing a binary (preventing execution)
 
 The rule in this example “fuzzes” a binary, altering the bytes (but not the length of the byte sequence) so that the binary can no longer be executed (in the case of .exe files) or accessed by other programs (in the case of .dll files).
