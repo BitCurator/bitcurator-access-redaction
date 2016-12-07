@@ -8,14 +8,14 @@ at https://github.com/BitCurator/bitcurator-access-redaction/releases). You will
 see options to download either the .tar.gz or .zip versions of the release. 
 Use the .zip link.
 
-1. Open a terminal window. Use the following commands to move the zip file to the BitCurator home directory and unzip it:
+Open a terminal window. Use the following commands to move the zip file to the BitCurator home directory and unzip it:
 
 ```shell
 $ mv ~/Downloads/v0.4.2.zip .
 $ unzip v0.4.2
 ```
 
-2. In the same terminal, navigate to the libredact sub-folder, and then run the pip (Python 2.7 version) install command:
+In the same terminal, navigate to the libredact sub-folder, and then run the pip (Python 2.7 version) install command:
 
 ```shell
 $ cd bca-redtools-0.4.0/libredact
