@@ -161,7 +161,7 @@ $ redact-gui
 
 In this test, we will perform the “SCRUB” action. We’ll create a new scrub configuration file and a new output file to demonstrate the process, even though we’ll be scrubbing the same file from the raw disk image.
 
-In the Disk Image Redaction window, click “Open Editor” (top right section, shown below).
+In the Disk Image Redaction window, click “Open Editor”.
 
 A gedit text editing window will appear. Add the following lines:
 
@@ -174,7 +174,7 @@ COMMIT
 
 Do not click “Save” - this will simply save the file with the default name, “None”. Instead, move your cursor to the gedit menu bar, select “File -> Save As”, and save the file as “scrub_config2.txt” in the /home/bcadmin directory. Click “Save” in the file dialog, then close the gedit window. Click “OK” to dismiss the final reminder dialog.
 
-Now click “Select File..”, and in the file dialog select the “scrub-config2.txt” file you just created in /home/bcadmin. Click “Run”, and the application should apply the redaction, generating feedback on the process in the “Console Output” window:
+Now click “Select File..”, and in the file dialog select the “scrub-config2.txt” file you just created in /home/bcadmin. Click “Run”, and the application should apply the redaction, generating feedback on the process in the “Console Output” window.
 
 ###Verify the redaction
 
