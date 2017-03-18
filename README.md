@@ -1,5 +1,8 @@
 # BitCurator Access Redaction Tools (bitcurator-access-redaction)
 
+![alt tag](https://img.shields.io/github/issues/bitcurator/bitcurator-access-redaction.svg)
+![alt tag](https://img.shields.io/github/forks/bitcurator/bitcurator-access-redaction.svg)
+
 This repository includes a set of redaction tools developed for the BitCurator Access project. These tools are primarily intended to support scrubbing/overwriting patterns identified in raw disk image files, but may be applied to any source presented as a file. Redacting patterns from raw disk images (or files) may render the disk image (or file) unmountable or unrenderable. Use at your own risk!
 
 This repository currently includes the following libraries:
