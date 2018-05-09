@@ -1,3 +1,5 @@
+[![Logo](https://wiki.bitcurator.net/downloads/BitCurator-400px.png)
+
 # BitCurator Access Redaction Tools (bitcurator-access-redaction)
 
 [![GitHub issues](https://img.shields.io/github/issues/bitcurator/bitcurator-access-redaction.svg)](https://github.com/bitcurator/bitcurator-access-redaction/issues)
