@@ -4,8 +4,13 @@
 
 [![GitHub issues](https://img.shields.io/github/issues/bitcurator/bitcurator-access-redaction.svg)](https://github.com/bitcurator/bitcurator-access-redaction/issues)
 [![GitHub forks](https://img.shields.io/github/forks/bitcurator/bitcurator-access-redaction.svg)](https://github.com/bitcurator/bitcurator-access-redaction/network)
-[![Travis](https://img.shields.io/travis/BitCurator/bitcurator-access-redaction.svg)](https://travis-ci.org/BitCurator/bitcurator-access-redaction)
 [![Twitter Follow](https://img.shields.io/twitter/follow/bitcurator.svg?style=social&label=Follow)](https://twitter.com/bitcurator)
+
+# END-OF-LIFE (EOL) NOTICE 
+
+This research software has reached end-of-life. The code in this repository is no longer actively maintained or supported.
+
+## About
 
 This repository includes a set of redaction tools developed for the BitCurator Access project. These tools are primarily intended to support scrubbing/overwriting patterns identified in raw disk image files, but may be applied to any source presented as a file. Redacting patterns from raw disk images (or files) may render the disk image (or file) unmountable or unrenderable. Use at your own risk!
 
